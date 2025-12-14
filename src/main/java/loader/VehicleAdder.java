@@ -5,6 +5,9 @@ import de.tudresden.sumo.cmd.Vehicle;
 import model.MyVehicle;
 import util.ConnectionManager;
 
+
+
+
 public class VehicleAdder {
     public static int vehCounter = 0;
     public static ConnectionManager conn;
