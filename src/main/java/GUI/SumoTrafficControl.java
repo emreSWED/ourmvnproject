@@ -1,7 +1,5 @@
 package GUI;
 
-package JavaOOP2025;
-
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -42,7 +40,7 @@ public class SumoTrafficControl extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    SumoDemo frame = new SumoDemo();
+                    SumoTrafficControl frame = new SumoTrafficControl();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -54,7 +52,7 @@ public class SumoTrafficControl extends JFrame {
     /**
      * Create the frame.
      */
-    public SumoDemo() {
+    public SumoTrafficControl() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1700, 900);
         contentPane = new JPanel();

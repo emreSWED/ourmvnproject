@@ -1,5 +1,6 @@
 
 import GUI.PrincipalComp;
+import GUI.SumoTrafficControl;
 import de.tudresden.sumo.cmd.*;
 import de.tudresden.sumo.objects.SumoColor;
 import de.tudresden.sumo.objects.SumoLink;
@@ -49,6 +50,10 @@ public class Main {
 
         javax.swing.SwingUtilities.invokeLater(() -> {
             new PrincipalComp();
+        });
+
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            new SumoTrafficControl();
         });
 
         int numberOfTrafficLights = (int)conn.dojobget(Trafficlight.getIDCount());
