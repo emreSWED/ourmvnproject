@@ -29,6 +29,7 @@ public class Main {
         conn.startConnection();
         RouteGenerator.conn = conn;
         MyLane.conn = conn;
+        VehicleAdder.conn = conn;
 
         MySystem mySystem = new MySystem(conn);
         LaneLoader currentLanes = new LaneLoader(conn);

@@ -11,7 +11,7 @@ public class VehicleAdder {
     public VehicleAdder() {
 
     }
-    public void addRandomVehicle() throws Exception {
+    public static void addRandomVehicle() throws Exception {
         int randomRouteVariable = (int)(Math.random()*5);
         conn.dojobset(Vehicle.add("ourVehicle"+vehCounter,"DEFAULT_VEHTYPE", "route"+randomRouteVariable, (int)conn.dojobget(Simulation.getCurrentTime())+1, 0.0,15.0, (byte) 0));
         vehCounter++;
