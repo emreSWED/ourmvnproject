@@ -8,8 +8,7 @@ import de.tudresden.sumo.objects.SumoTLSController;
 import de.tudresden.sumo.util.*;
 import it.polito.appeal.traci.*;
 
-import loader.LaneLoader;
-import loader.MyLane;
+import loader.*;
 import model.MyTrafficLight;
 
 import java.awt.*;
@@ -29,6 +28,11 @@ public class Main {
         ConnectionManager conn = new ConnectionManager("SumoConfig/myconfig.sumocfg");
         conn.startConnection();
         MySystem mySystem = new MySystem(conn);
+        MyLane.conn = conn;
+        LaneLoader currentLanes = new LaneLoader(conn);
+        RouteGenerator routeGenerator = new RouteGenerator();
+        VehicleAdder vehicleAdder = new VehicleAdder();
+        YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
 
         //get map data for UI
        // List<String> trafficLights = conn.getTrafficLights();
@@ -80,8 +84,6 @@ public class Main {
         System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
         //Last coordinates on Lanes "going from" are those where traffic lights should be placed. In this case: 85.42, 107.99 since
         //its the first in List of controlled links.
-        MyLane.conn = conn;
-        LaneLoader currentLanes = new LaneLoader(conn);
 
         LaneLoader.printAllLaneIDs();
 
