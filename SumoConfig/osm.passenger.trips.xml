@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-12-04 13:13:50.892715 by osmWebWizard.py v1_24_0+0000-b72eb3fabc8
+<configuration>
+    <net-file value="C:\Users\EMPC\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\SUMO\2025-12-04-13-13-45\osm.net.xml.gz"/>
+    <output-trip-file value="C:\Users\EMPC\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\SUMO\2025-12-04-13-13-45\osm.passenger.trips.xml"/>
+    <route-file value="C:\Users\EMPC\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\SUMO\2025-12-04-13-13-45\osm.passenger.rou.xml"/>
+    <prefix value="veh"/>
+    <trip-attributes value="departLane=&quot;best&quot;"/>
+    <fringe-start-attributes value="departSpeed=&quot;max&quot;"/>
+    <vehicle-class value="passenger"/>
+    <lanes value="True"/>
+    <fringe-factor value="4"/>
+    <allow-fringe.min-length value="1000.0"/>
+    <edge-permission value="passenger"/>
+    <via-edge-types value="highway.motorway,highway.motorway_link,highway.trunk_link,highway.primary_link,highway.secondary_link,highway.tertiary_link"/>
+    <min-distance value="300.0"/>
+    <min-distance.fringe value="10.0"/>
+    <remove-loops value="True"/>
+    <insertion-density value="4.0"/>
+</configuration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vType id="veh_passenger" vClass="passenger"/>
+    <trip id="veh0" depart="0.00" from="-23490810#1" to="23490810#1" via="28378604"  departLane="best" type="veh_passenger" departSpeed="max"/>
+    <trip id="veh1" depart="10.00" from="-23490810#1" to="23490810#1" via="317948763"  departLane="best" type="veh_passenger" departSpeed="max"/>
+    <trip id="veh2" depart="20.00" from="495683152" to="23490810#1" via="-317948763"  departLane="best" type="veh_passenger" departSpeed="max"/>
+    <trip id="veh3" depart="30.00" from="-23490810#1" to="23490810#1" via="28378604"  departLane="best" type="veh_passenger" departSpeed="max"/>
+</routes>

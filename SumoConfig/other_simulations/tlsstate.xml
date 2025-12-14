@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2025-12-05 10:46:36 by Eclipse SUMO GUI Version 1.24.0
+<sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="SumoConfig/fkk_in/ingolstadt.net.xml.gz"/>
+        <route-files value="SumoConfig/fkk_in/fkk_in.rou.xml"/>
+        <additional-files value="SumoConfig/fkk_in/fkk_in.tls.add.xml,SumoConfig/input_additional.add.xml"/>
+    </input>
+
+    <time>
+        <begin value="0"/>
+        <end value="180"/>
+        <step-length value=".2"/>
+    </time>
+
+    <report>
+        <xml-validation value="never"/>
+    </report>
+
+    <traci_server>
+        <remote-port value="54894"/>
+    </traci_server>
+
+    <gui_only>
+        <gui-settings-file value="SumoConfig/fkk_in/fkk_in.settings.xml"/>
+        <start value="true"/>
+    </gui_only>
+
+</sumoConfiguration>
+-->
+
+<tlsStates xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tlsstates_file.xsd">
+    <tlsState time="0.00" id="335525545" programID="real_tl_4050_9" phase="0" state="rrrrrgrrrrrrr"/>
+    <tlsState time="0.00" id="gneJ21" programID="manual" phase="0" state="rrryyyrrrrrrrrrrrr" name="3.1"/>
+</tlsStates>
