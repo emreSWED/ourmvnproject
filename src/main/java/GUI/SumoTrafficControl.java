@@ -1,4 +1,5 @@
 package GUI;
+import loader.VehicleAdder;
 
 import java.awt.EventQueue;
 
@@ -142,6 +143,15 @@ public class SumoTrafficControl extends JFrame {
         contentPane.add(btnStressTest);
 
         JButton btnAddVehicle = new JButton("Add Vehicle");
+        btnAddVehicle.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    VehicleAdder.addRandomVehicle();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
         btnAddVehicle.setBounds(10, 320, 276, 50);
         contentPane.add(btnAddVehicle);
 
