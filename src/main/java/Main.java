@@ -58,11 +58,18 @@ public class Main {
        // System.out.println("Controlled links by traffic light 1: " + trafficLightLinks);
         //System.out.println("First link :"+ trafficLightLinks.getFirst());
 
+        int numberOfTrafficLights = (int) conn.dojobget(Trafficlight.getIDCount());
+        System.out.println("Number of Traffic Lights: " + numberOfTrafficLights);
+
+        // Hier holen wir die Liste für die GUI
+        List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
+        System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
                     SumoTrafficControl frame = new SumoTrafficControl();
+                    frame.setTrafficLights(trafficLightsList);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -70,6 +77,7 @@ public class Main {
             }
         });
 
+        System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
 
         javax.swing.SwingUtilities.invokeLater(() -> {
             new SumoTrafficControl();
@@ -79,8 +87,8 @@ public class Main {
         javax.swing.SwingUtilities.invokeLater(() -> {
             new PrincipalComp();
         });
-
-        int numberOfTrafficLights = (int)conn.dojobget(Trafficlight.getIDCount());
+        //da doppelt oben
+        //int numberOfTrafficLights = (int)conn.dojobget(Trafficlight.getIDCount());
         System.out.println("Number of Traffic Lights: " + numberOfTrafficLights);
 
         List<MyTrafficLight> trafficLights = mySystem.getTrafficLights();
@@ -116,6 +124,11 @@ public class Main {
                 System.out.println("ControlledLanes: " + t.getControlledLanes());
                 System.out.println("ControlledLinks: " + t.getControlledLinks());
                 System.out.println("State: " + t.getState());
+            }
+
+            // Status der Ampeln prüfen (optional)
+            for (MyTrafficLight t : trafficLightsList) {
+                System.out.println("ID: " + t.getId() + " State: " + t.getState());
             }
 
             TimeUnit.MILLISECONDS.sleep(100);

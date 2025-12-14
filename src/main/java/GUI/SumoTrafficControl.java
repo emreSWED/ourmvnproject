@@ -1,5 +1,7 @@
 package GUI;
 import loader.VehicleAdder;
+import model.MyTrafficLight;
+import util.MySystem;
 
 import java.awt.EventQueue;
 
@@ -23,7 +25,8 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeEvent;import java.util.List;
+import java.util.ArrayList;
 
 public class SumoTrafficControl extends JFrame {
 
@@ -33,6 +36,15 @@ public class SumoTrafficControl extends JFrame {
     private JTextField textField_Green;
     private JTextField textField_Blue;
     private JTextField textField_Alpha;
+
+    // NEU: Hier speichern wir die Liste, die wir später bekommen
+    private List<MyTrafficLight> loadedTrafficLights = new ArrayList<>();
+    private String currentTrafficLightID = ""; // Die aktuell gewählte ID
+
+    // NEU: Setter-Methode, um die Liste von außen (aus der Main) zu füllen
+    public void setTrafficLights(List<MyTrafficLight> lights) {
+        this.loadedTrafficLights = lights;
+    }
 
     /**
      * Launch the application.
@@ -201,14 +213,55 @@ public class SumoTrafficControl extends JFrame {
         lblNewLabel_2_3.setBounds(6, 287, 46, 14);
         contentPane.add(lblNewLabel_2_3);
 
-        JComboBox comboBox = new JComboBox();
+        JComboBox<String> comboBox = new JComboBox<>();
+        comboBox.setModel(new DefaultComboBoxModel<>(new String[] {
+                "Traffic Light 1",
+                "Traffic Light 2",
+                "Traffic Light 3"
+        }));
+        comboBox.setBounds(10, 442, 276, 39);
+
         comboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String selectedValue = comboBox.getSelectedItem().toString();
+                String selectedName = comboBox.getSelectedItem().toString();
+
+                // Sicherheits-Check: Ist die Liste überhaupt schon da?
+                if (loadedTrafficLights == null || loadedTrafficLights.isEmpty()) {
+                    System.out.println("Warnung: Noch keine Ampeln geladen!");
+                    return;
+                }
+
+                // Zuordnung: Name -> Index in der Liste
+                switch (selectedName) {
+                    case "Traffic Light 1":
+                        // Prüfen, ob Index 0 existiert, dann ID holen
+                        if (loadedTrafficLights.size() > 0) {
+                            currentTrafficLightID = loadedTrafficLights.get(0).getId();
+                        }
+                        break;
+
+                    case "Traffic Light 2":
+                        // Prüfen, ob Index 1 existiert
+                        if (loadedTrafficLights.size() > 1) {
+                            currentTrafficLightID = loadedTrafficLights.get(1).getId();
+                        }
+                        break;
+
+                    case "Traffic Light 3":
+                        // Prüfen, ob Index 2 existiert
+                        if (loadedTrafficLights.size() > 2) {
+                            currentTrafficLightID = loadedTrafficLights.get(2).getId();
+                        }
+                        break;
+
+                    default:
+                        System.out.println("Unbekannte Auswahl");
+                        break;
+                }
+
+                System.out.println("Ausgewählte ID: " + currentTrafficLightID);
             }
         });
-        comboBox.setModel(new DefaultComboBoxModel(new String[] {"Traffic Light 1", "Traffic Light 2", "Traffic Light 3", "Traffic Light 4", "Traffic Light 5", "Traffic Light 6", "Traffic Light 7", "Traffic Light 8"}));
-        comboBox.setBounds(10, 442, 276, 39);
         contentPane.add(comboBox);
 
         textField_Red = new JTextField();
