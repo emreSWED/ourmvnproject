@@ -30,6 +30,7 @@ public class Main {
         RouteGenerator.conn = conn;
         MyLane.conn = conn;
         VehicleAdder.conn = conn;
+        SimulationWindowBounds simulationWindowBounds = new SimulationWindowBounds(conn);
 
         MySystem mySystem = new MySystem(conn);
         LaneLoader currentLanes = new LaneLoader(conn);
@@ -113,7 +114,7 @@ public class Main {
 
             List<MyVehicle> vehicles = mySystem.getVehicles();
             for (MyVehicle v : vehicles) {
-                v.setColor(v.getId(), new SumoColor(0x00,0x00,0xFF,0x00));
+                v.setColor(v.getId(), new SumoColor(0xFF,0xFF,0xFF,0x00));
                 v.setSpeed(1.0);
                 System.out.println(v.getX() + ", " + v.getY() + ", " + v.getSpeed() + ", " + v.getId());
             }
