@@ -1,4 +1,3 @@
-
 import GUI.PrincipalComp;
 import GUI.SumoTrafficControl;
 import de.tudresden.sumo.cmd.*;
@@ -12,6 +11,8 @@ import it.polito.appeal.traci.*;
 import loader.LaneLoader;
 import loader.MyLane;
 import model.MyTrafficLight;
+
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -48,12 +49,26 @@ public class Main {
        // System.out.println("Controlled links by traffic light 1: " + trafficLightLinks);
         //System.out.println("First link :"+ trafficLightLinks.getFirst());
 
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            new PrincipalComp();
+
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    SumoTrafficControl frame = new SumoTrafficControl();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         });
+
 
         javax.swing.SwingUtilities.invokeLater(() -> {
             new SumoTrafficControl();
+        });
+
+
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            new PrincipalComp();
         });
 
         int numberOfTrafficLights = (int)conn.dojobget(Trafficlight.getIDCount());
