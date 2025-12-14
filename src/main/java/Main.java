@@ -27,10 +27,14 @@ public class Main {
 
         ConnectionManager conn = new ConnectionManager("SumoConfig/myconfig.sumocfg");
         conn.startConnection();
-        MySystem mySystem = new MySystem(conn);
+        RouteGenerator.conn = conn;
         MyLane.conn = conn;
+
+        MySystem mySystem = new MySystem(conn);
         LaneLoader currentLanes = new LaneLoader(conn);
+
         RouteGenerator routeGenerator = new RouteGenerator();
+
         VehicleAdder vehicleAdder = new VehicleAdder();
         YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
 
