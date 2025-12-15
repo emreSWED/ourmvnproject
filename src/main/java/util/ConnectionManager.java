@@ -13,20 +13,20 @@ import model.MyTrafficLight;
 
 public class ConnectionManager {
     private String configFile;
-    public SumoTraciConnection traciConnection;
+    public static SumoTraciConnection traciConnection;
 
     public ConnectionManager(String configFile) {
         this.configFile = configFile;
-        this.traciConnection = new SumoTraciConnection("sumo-gui", this.configFile);
+        traciConnection = new SumoTraciConnection("sumo-gui", this.configFile);
     }
 
     public Object dojobget(SumoCommand cmd) throws Exception {
 
-        return this.traciConnection.do_job_get(cmd);
+        return traciConnection.do_job_get(cmd);
     }
 
     public void dojobset(SumoCommand cmd) throws Exception {
-        this.traciConnection.do_job_set(cmd);
+        traciConnection.do_job_set(cmd);
     }
 
     public void startConnection() throws IOException {

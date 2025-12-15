@@ -1,6 +1,7 @@
 package GUI;
 import loader.VehicleAdder;
 import model.MyTrafficLight;
+import util.ConnectionManager;
 import util.MySystem;
 
 import java.awt.EventQueue;
@@ -67,7 +68,7 @@ public class SumoTrafficControl extends JFrame {
      */
     public SumoTrafficControl() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1700, 900);
+        setBounds(100, 100, 400, 900);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -167,25 +168,46 @@ public class SumoTrafficControl extends JFrame {
         btnAddVehicle.setBounds(10, 320, 276, 50);
         contentPane.add(btnAddVehicle);
 
+        MyTrafficLight t1 = new MyTrafficLight("254384053", ConnectionManager.traciConnection);
+        // Will be replaced with traffic light selection soon
+
         JButton btnNewButton_1 = new JButton("Red");
         btnNewButton_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                t1.setPhase("rrrrrrrrr");
             }
         });
         btnNewButton_1.setBounds(10, 492, 133, 50);
         contentPane.add(btnNewButton_1);
 
         JButton btnNewButton_1_1 = new JButton("Green (Priority)");
+        btnNewButton_1_1.setForeground(new Color(0, 0, 0));
+        btnNewButton_1_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                t1.setPhase("GGGGGGGGG");
+            }
+        });
         btnNewButton_1_1.setBounds(153, 572, 133, 50);
         contentPane.add(btnNewButton_1_1);
 
-        JButton btnNewButton_1_1_1 = new JButton("Amber");
+        JButton btnNewButton_1_1_1 = new JButton("Yellow");
         btnNewButton_1_1_1.setForeground(new Color(0, 0, 0));
+        btnNewButton_1_1_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                t1.setPhase("yyyyyyyyy");
+            }
+        });
         btnNewButton_1_1_1.setBounds(153, 492, 133, 50);
         contentPane.add(btnNewButton_1_1_1);
 
         JButton btnNewButton_1_1_2 = new JButton("Green (non-Priority)");
+        btnNewButton_1_1_2.setForeground(new Color(0, 0, 0));
+        btnNewButton_1_1_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                t1.setPhase("ggggggggg");
+            }
+        });
         btnNewButton_1_1_2.setBounds(10, 572, 133, 50);
         contentPane.add(btnNewButton_1_1_2);
 

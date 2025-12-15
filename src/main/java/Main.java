@@ -85,9 +85,9 @@ public class Main {
         });
 
 
-        javax.swing.SwingUtilities.invokeLater(() -> {
+        /*javax.swing.SwingUtilities.invokeLater(() -> {
             new PrincipalComp();
-        });
+        });*/
         //da doppelt oben
         //int numberOfTrafficLights = (int)conn.dojobget(Trafficlight.getIDCount());
         System.out.println("Number of Traffic Lights: " + numberOfTrafficLights);
@@ -108,7 +108,7 @@ public class Main {
             System.out.println("List of cars in simulation: " + mySystem.getVehicles());
 
             if (step == 20) {
-                MyTrafficLight t1 = new MyTrafficLight("254384053", conn.traciConnection);
+                MyTrafficLight t1 = new MyTrafficLight("254384053", ConnectionManager.traciConnection);
                 //t1.setPhase();
             }
 
