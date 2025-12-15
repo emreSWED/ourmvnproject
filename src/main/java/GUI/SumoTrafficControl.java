@@ -38,35 +38,17 @@ public class SumoTrafficControl extends JFrame {
     private JTextField textField_Blue;
     private JTextField textField_Alpha;
 
-    // NEU: Hier speichern wir die Liste, die wir später bekommen
+    private ConnectionManager connectionManager;
+    private MySystem mySystem = new MySystem(connectionManager.traciConnection);
     private List<MyTrafficLight> loadedTrafficLights = new ArrayList<>();
-    private String currentTrafficLightID = ""; // Die aktuell gewählte ID
+    private String currentTrafficLightID = mySystem.getTrafficLights().getFirst().getId();
+    MyTrafficLight trafficLights = new MyTrafficLight(currentTrafficLightID, ConnectionManager.traciConnection);
 
-    // NEU: Setter-Methode, um die Liste von außen (aus der Main) zu füllen
     public void setTrafficLights(List<MyTrafficLight> lights) {
         this.loadedTrafficLights = lights;
     }
 
-    /**
-     * Launch the application.
-     *//*
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    SumoTrafficControl frame = new SumoTrafficControl();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    *//**
-     * Create the frame.
-     */
-    public SumoTrafficControl() {
+    public SumoTrafficControl() throws Exception {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 400, 900);
         contentPane = new JPanel();
@@ -168,14 +150,11 @@ public class SumoTrafficControl extends JFrame {
         btnAddVehicle.setBounds(10, 320, 276, 50);
         contentPane.add(btnAddVehicle);
 
-        MyTrafficLight t1 = new MyTrafficLight("254384053", ConnectionManager.traciConnection);
-        // Will be replaced with traffic light selection soon
-
         JButton btnNewButton_1 = new JButton("Red");
         btnNewButton_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                t1.setPhase("rrrrrrrrr");
+                trafficLights.setPhase("rrrrrrrrr");
             }
         });
         btnNewButton_1.setBounds(10, 492, 133, 50);
@@ -185,7 +164,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                t1.setPhase("GGGGGGGGG");
+                trafficLights.setPhase("GGGGGGGGG");
             }
         });
         btnNewButton_1_1.setBounds(153, 572, 133, 50);
@@ -195,7 +174,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                t1.setPhase("yyyyyyyyy");
+                trafficLights.setPhase("yyyyyyyyy");
             }
         });
         btnNewButton_1_1_1.setBounds(153, 492, 133, 50);
@@ -205,7 +184,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1_2.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                t1.setPhase("ggggggggg");
+                trafficLights.setPhase("ggggggggg");
             }
         });
         btnNewButton_1_1_2.setBounds(10, 572, 133, 50);
@@ -236,49 +215,22 @@ public class SumoTrafficControl extends JFrame {
         contentPane.add(lblNewLabel_2_3);
 
         JComboBox<String> comboBox = new JComboBox<>();
-        comboBox.setModel(new DefaultComboBoxModel<>(new String[] {
-                "Traffic Light 1",
-                "Traffic Light 2",
-                "Traffic Light 3"
-        }));
+        List<MyTrafficLight> trafficLights = mySystem.getTrafficLights();
+        String[] trafficLightIds = trafficLights.stream()
+                .map(MyTrafficLight::getId)
+                .toArray(String[]::new);
+        comboBox.setModel(new DefaultComboBoxModel<>(
+                trafficLightIds
+        ));
         comboBox.setBounds(10, 442, 276, 39);
 
         comboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String selectedName = comboBox.getSelectedItem().toString();
+                currentTrafficLightID = comboBox.getSelectedItem().toString();
 
-                // Sicherheits-Check: Ist die Liste überhaupt schon da?
                 if (loadedTrafficLights == null || loadedTrafficLights.isEmpty()) {
                     System.out.println("Warnung: Noch keine Ampeln geladen!");
                     return;
-                }
-
-                // Zuordnung: Name -> Index in der Liste
-                switch (selectedName) {
-                    case "Traffic Light 1":
-                        // Prüfen, ob Index 0 existiert, dann ID holen
-                        if (loadedTrafficLights.size() > 0) {
-                            currentTrafficLightID = loadedTrafficLights.get(0).getId();
-                        }
-                        break;
-
-                    case "Traffic Light 2":
-                        // Prüfen, ob Index 1 existiert
-                        if (loadedTrafficLights.size() > 1) {
-                            currentTrafficLightID = loadedTrafficLights.get(1).getId();
-                        }
-                        break;
-
-                    case "Traffic Light 3":
-                        // Prüfen, ob Index 2 existiert
-                        if (loadedTrafficLights.size() > 2) {
-                            currentTrafficLightID = loadedTrafficLights.get(2).getId();
-                        }
-                        break;
-
-                    default:
-                        System.out.println("Unbekannte Auswahl");
-                        break;
                 }
 
                 System.out.println("Ausgewählte ID: " + currentTrafficLightID);

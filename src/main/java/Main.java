@@ -32,7 +32,7 @@ public class Main {
         VehicleAdder.conn = conn;
         SimulationWindowBounds simulationWindowBounds = new SimulationWindowBounds(conn);
 
-        MySystem mySystem = new MySystem(conn);
+        MySystem mySystem = new MySystem(conn.traciConnection);
         LaneLoader currentLanes = new LaneLoader(conn);
 
         RouteGenerator routeGenerator = new RouteGenerator();
@@ -81,7 +81,11 @@ public class Main {
         System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
 
         javax.swing.SwingUtilities.invokeLater(() -> {
-            new SumoTrafficControl();
+            try {
+                new SumoTrafficControl();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         });
 
 
