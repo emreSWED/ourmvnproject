@@ -23,7 +23,11 @@ import util.MySystem;
 import model.MyVehicle;
 
 public class Main {
+
+    static GUI.SumoTrafficControl gui;
     public static void main(String[] args) throws Exception {
+
+
 
         ConnectionManager conn = new ConnectionManager("SumoConfig/myconfig.sumocfg");
         conn.startConnection();
@@ -80,11 +84,13 @@ public class Main {
 
         System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
 
-        javax.swing.SwingUtilities.invokeLater(() -> {
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
             try {
-                new SumoTrafficControl();
+                gui = new GUI.SumoTrafficControl();
+                gui.setTrafficLights(trafficLightsList);
+                gui.setVisible(true);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         });
 
@@ -107,6 +113,15 @@ public class Main {
 
         for (int step = 0; step < 10000; step++) {
             conn.step();
+
+            if (gui != null) {
+                gui.refreshMap(mySystem.getVehicles());
+            }
+            try {
+                Thread.sleep(50); // 50ms Pause = flüssige Bewegung
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
             System.out.println("List of cars in simulation: " + mySystem.getVehicles());

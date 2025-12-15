@@ -1,5 +1,6 @@
 package model;
 
+import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.objects.SumoColor;
 import de.tudresden.sumo.objects.SumoPosition2D;
 import it.polito.appeal.traci.SumoTraciConnection;
@@ -33,6 +34,15 @@ public class MyVehicle {
         }catch(Exception e){
             return -1.0;
         }
+    }
+    public double getAngle() {
+        try {
+
+            return (double) conn.do_job_get(Vehicle.getAngle(this.id));
+        } catch (Exception e) {
+            return 0;
+        }
+
     }
 
     public double getSpeed(){

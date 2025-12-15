@@ -38,6 +38,8 @@ public class SumoTrafficControl extends JFrame {
     private JTextField textField_Blue;
     private JTextField textField_Alpha;
 
+    private MapPanel mapPanel;
+
     private ConnectionManager connectionManager;
     private MySystem mySystem = new MySystem(connectionManager.traciConnection);
     private List<MyTrafficLight> loadedTrafficLights = new ArrayList<>();
@@ -50,7 +52,7 @@ public class SumoTrafficControl extends JFrame {
 
     public SumoTrafficControl() throws Exception {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 400, 900);
+        setBounds(100, 100, 1300, 900);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -61,6 +63,10 @@ public class SumoTrafficControl extends JFrame {
         lblNewLabel.setFont(new Font("Ink Free", Font.ITALIC, 60));
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
         contentPane.add(lblNewLabel);
+
+        mapPanel = new MapPanel();
+        mapPanel.setBounds(320, 110, 950, 740);
+        contentPane.add(mapPanel);
 
         // --- RED SLIDER ---
         JSlider slider_Red = new JSlider();
@@ -266,5 +272,11 @@ public class SumoTrafficControl extends JFrame {
         textField_Alpha.setText(String.valueOf(slider_Alpha.getValue())); // <--- NEU
         contentPane.add(textField_Alpha);
 
+    }
+
+    public void refreshMap(java.util.List<model.MyVehicle> vehicles) {
+        if (mapPanel != null) {
+            mapPanel.updateVehicles(vehicles);
+        }
     }
 }
