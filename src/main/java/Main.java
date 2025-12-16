@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import util.ConnectionManager;
 import util.MySystem;
 
@@ -23,6 +25,8 @@ import util.MySystem;
 import model.MyVehicle;
 
 public class Main {
+    private static final Logger LOG = LogManager.getLogger(Main.class.getName());
+
     public static void main(String[] args) throws Exception {
 
         ConnectionManager conn = new ConnectionManager("SumoConfig/myconfig.sumocfg");
@@ -65,7 +69,7 @@ public class Main {
         // Hier holen wir die Liste für die GUI
         List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
         System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
-
+        LOG.info("Starting application...");
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
