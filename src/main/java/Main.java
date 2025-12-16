@@ -111,6 +111,15 @@ public class Main {
         for (int step = 0; step < 10000; step++) {
             conn.step();
 
+            if (gui != null) {
+                gui.refreshMap(mySystem.getVehicles());
+            }
+            try {
+                Thread.sleep(50); // 50ms Pause = flüssige Bewegung
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
             System.out.println("List of cars in simulation: " + mySystem.getVehicles());
 
