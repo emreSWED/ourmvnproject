@@ -80,15 +80,16 @@ public class Main {
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    LOG.warn("Handled exception in main.");
                 }
             }
         });
 
         System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
 
-        javax.swing.SwingUtilities.invokeLater(() -> {
+       /* javax.swing.SwingUtilities.invokeLater(() -> {
             new SumoTrafficControl();
-        });
+        });*/
 
 
         javax.swing.SwingUtilities.invokeLater(() -> {

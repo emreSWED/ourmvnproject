@@ -1,10 +1,16 @@
 package GUI;
 import it.polito.appeal.traci.SumoTraciConnection;
+import loader.VehicleAdder;
 import model.MyVehicle;
 import util.ConnectionManager;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.JCheckBox;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class PrincipalComp extends JFrame{
@@ -77,20 +83,40 @@ public class PrincipalComp extends JFrame{
 
 
         //checkbox Options
-        String[] carC_Options = {
-                "Red","Green", "Blue", "Gray"
-        };
+        String[] carC_Options = {"Red","Green", "Blue", "Gray"};
         moreOpt_panel.setVisible(false);
+
+        //saves the selected color/checkbox
+        List<JCheckBox> colorBoxes = new ArrayList<>();
 
         for(String colors : carC_Options){
             JCheckBox col_insert = new JCheckBox(colors);
+            colorBoxes.add(col_insert);
             moreOpt_panel.add(col_insert);
         }
-        //event for +AddCar button displays checkbox in more Options panel
-        addC_b.addActionListener(e->{
+
+        addC_b.addActionListener(e-> {
             moreOpt_panel.setVisible(true);
             moreOpt_panel.revalidate(); //recalcula Layout
             moreOpt_panel.repaint(); // pinta todos de nuevo
+
+            try {
+                //recognise which box has been checked
+                for (JCheckBox box : colorBoxes) {
+                    if(box.isSelected()){
+                        String color = box.getText();
+                        if(colorBoxes.equals("Red")) {
+
+                        MyVehicle.setColor(MyVehicle.id,color); // analyze and change
+                        }
+                    VehicleAdder.addRandomVehicle();
+
+            }
+        }
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+
+            }
         });
         buttons_panel.add(addC_b);
 
