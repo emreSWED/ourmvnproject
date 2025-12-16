@@ -107,7 +107,7 @@ public class PrincipalComp extends JFrame{
                         String color = box.getText();
                         if(colorBoxes.equals("Red")) {
 
-                        MyVehicle.setColor(MyVehicle.id,color); // analyze and change
+                      //  MyVehicle.setColor(MyVehicle.id,color); // analyze and change
                         }
                     VehicleAdder.addRandomVehicle();
 
