@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import util.ConnectionManager;
 import util.MySystem;
 
@@ -25,11 +23,8 @@ import util.MySystem;
 import model.MyVehicle;
 
 public class Main {
-    private static final Logger LOG = LogManager.getLogger(Main.class.getName());
-
     public static void main(String[] args) throws Exception {
 
-        LOG.info("initializing connection to SUMO");
         ConnectionManager conn = new ConnectionManager("SumoConfig/myconfig.sumocfg");
         conn.startConnection();
         RouteGenerator.conn = conn;
@@ -71,7 +66,6 @@ public class Main {
         List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
         System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
 
-        LOG.info("Starting application...");
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -80,16 +74,15 @@ public class Main {
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    LOG.warn("Handled exception in main.");
                 }
             }
         });
 
         System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
 
-       /* javax.swing.SwingUtilities.invokeLater(() -> {
+        javax.swing.SwingUtilities.invokeLater(() -> {
             new SumoTrafficControl();
-        });*/
+        });
 
 
         javax.swing.SwingUtilities.invokeLater(() -> {
@@ -110,15 +103,6 @@ public class Main {
 
         for (int step = 0; step < 10000; step++) {
             conn.step();
-
-            if (gui != null) {
-                gui.refreshMap(mySystem.getVehicles());
-            }
-            try {
-                Thread.sleep(50); // 50ms Pause = flüssige Bewegung
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
             System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
             System.out.println("List of cars in simulation: " + mySystem.getVehicles());
