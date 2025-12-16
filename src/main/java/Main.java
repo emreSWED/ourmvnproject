@@ -70,7 +70,7 @@ public class Main {
         List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
         System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
 
-        EventQueue.invokeLater(new Runnable() {
+        /*EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
                     SumoTrafficControl frame = new SumoTrafficControl();
@@ -80,7 +80,7 @@ public class Main {
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
 
         System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
 
@@ -118,7 +118,7 @@ public class Main {
                 gui.refreshMap(mySystem.getVehicles());
             }
             try {
-                Thread.sleep(50); // 50ms Pause = flüssige Bewegung
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
