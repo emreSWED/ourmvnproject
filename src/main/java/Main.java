@@ -29,6 +29,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        LOG.info("initializing connection to SUMO");
         ConnectionManager conn = new ConnectionManager("SumoConfig/myconfig.sumocfg");
         conn.startConnection();
         RouteGenerator.conn = conn;
@@ -69,6 +70,7 @@ public class Main {
         // Hier holen wir die Liste für die GUI
         List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
         System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
+
         LOG.info("Starting application...");
         EventQueue.invokeLater(new Runnable() {
             public void run() {
