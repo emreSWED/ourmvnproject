@@ -13,8 +13,8 @@ import java.util.List;
 public class MySystem {
     public SumoTraciConnection traciConnection;
 
-    public MySystem(SumoTraciConnection connection) {
-        this.traciConnection = connection;
+    public MySystem(ConnectionManager connection) {
+        this.traciConnection = connection.traciConnection;
     }
 
     public List<MyVehicle> getVehicles() throws Exception {

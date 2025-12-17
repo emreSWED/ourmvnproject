@@ -18,15 +18,7 @@ public class MyVehicle {
        return this.id;
     }
 
-    public double getAngle() {
-        try {
 
-            return (double) conn.do_job_get(Vehicle.getAngle(this.id));
-        } catch (Exception e) {
-            return 0;
-        }
-
-    }
     public double getX() {
         try{
             SumoPosition2D pos = (SumoPosition2D) conn.do_job_get(de.tudresden.sumo.cmd.Vehicle.getPosition(this.id));
