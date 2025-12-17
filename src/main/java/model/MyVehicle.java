@@ -18,6 +18,7 @@ public class MyVehicle {
        return this.id;
     }
 
+
     public double getX() {
         try{
             SumoPosition2D pos = (SumoPosition2D) conn.do_job_get(de.tudresden.sumo.cmd.Vehicle.getPosition(this.id));
