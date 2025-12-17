@@ -30,6 +30,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;import java.util.List;
 import java.util.ArrayList;
 
+
 public class SumoTrafficControl extends JFrame {
 
     private static final long serialVersionUID = 1L;
@@ -58,7 +59,7 @@ public class SumoTrafficControl extends JFrame {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
-        // Big head title of the graphical user interface
+
         JLabel lblNewLabel = new JLabel("Sumo Traffic Simulation");
         lblNewLabel.setBounds(10, 11, 1674, 93);
         lblNewLabel.setFont(new Font("Ink Free", Font.ITALIC, 60));
@@ -68,8 +69,8 @@ public class SumoTrafficControl extends JFrame {
         mapPanel = new MapPanel();
         mapPanel.setBounds(320, 110, 950, 740);
         contentPane.add(mapPanel);
-        // Sliders of the RGBA Color, change listener updates the value of the text field next to the sliders
-        // --- Red color value slider ---
+
+        // --- RED SLIDER ---
         JSlider slider_Red = new JSlider();
         slider_Red.setMinorTickSpacing(5);
         slider_Red.setMaximum(255);
@@ -83,7 +84,7 @@ public class SumoTrafficControl extends JFrame {
         });
         contentPane.add(slider_Red);
 
-        // --- Green color value slider ---
+        // --- GREEN SLIDER ---
         JSlider slider_Green = new JSlider();
         slider_Green.setMinorTickSpacing(5);
         slider_Green.setMaximum(255);
@@ -96,7 +97,7 @@ public class SumoTrafficControl extends JFrame {
         });
         contentPane.add(slider_Green);
 
-        // --- Blue color value slider ---
+        // --- BLUE SLIDER ---
         JSlider slider_Blue = new JSlider();
         slider_Blue.setMinorTickSpacing(5);
         slider_Blue.setMaximum(255);
@@ -109,7 +110,7 @@ public class SumoTrafficControl extends JFrame {
         });
         contentPane.add(slider_Blue);
 
-        // --- Alpha value slider ---
+        // --- ALPHA SLIDER ---
         JSlider slider_Alpha = new JSlider();
         slider_Alpha.setMinorTickSpacing(5);
         slider_Alpha.setMaximum(255);
@@ -121,13 +122,13 @@ public class SumoTrafficControl extends JFrame {
             }
         });
         contentPane.add(slider_Alpha);
-        //Information Label describing the color modifying section
+
         JLabel lblNewLabel_1 = new JLabel("Color Changer");
         lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
         lblNewLabel_1.setFont(new Font("Ink Free", Font.ITALIC, 22));
         lblNewLabel_1.setBounds(10, 144, 276, 50);
         contentPane.add(lblNewLabel_1);
-        // The Start button, allowing the user to start the simulation after stopping it
+
         JButton btnNewButton = new JButton("START");
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -135,11 +136,11 @@ public class SumoTrafficControl extends JFrame {
         });
         btnNewButton.setBounds(10, 72, 133, 50);
         contentPane.add(btnNewButton);
-        // The Stop button, allowing the user to stop the simulation while it is running
+
         JButton btnStop = new JButton("STOP");
         btnStop.setBounds(153, 72, 133, 50);
         contentPane.add(btnStop);
-        //Stress Test button, which adds more vehicles and sets the traffic lights to the phase 'G'
+
         JButton btnStressTest = new JButton("Stress Test");
         btnStressTest.setBounds(10, 800, 276, 50);
         btnStressTest.addActionListener(new ActionListener() {
@@ -159,7 +160,7 @@ public class SumoTrafficControl extends JFrame {
             }
         });
         contentPane.add(btnStressTest);
-        //Injects another Vehicle into the simulation
+
         JButton btnAddVehicle = new JButton("Add Vehicle");
         btnAddVehicle.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -172,7 +173,7 @@ public class SumoTrafficControl extends JFrame {
         });
         btnAddVehicle.setBounds(10, 320, 276, 50);
         contentPane.add(btnAddVehicle);
-        // Button to set Traffic Light phase Red 'r'
+
         JButton btnNewButton_1 = new JButton("Red");
         btnNewButton_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1.addActionListener(new ActionListener() {
@@ -182,7 +183,7 @@ public class SumoTrafficControl extends JFrame {
         });
         btnNewButton_1.setBounds(10, 492, 133, 50);
         contentPane.add(btnNewButton_1);
-        // Button to set Traffic Light phase to Green with Priority 'G'
+
         JButton btnNewButton_1_1 = new JButton("Green (Priority)");
         btnNewButton_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1.addActionListener(new ActionListener() {
@@ -192,7 +193,7 @@ public class SumoTrafficControl extends JFrame {
         });
         btnNewButton_1_1.setBounds(153, 572, 133, 50);
         contentPane.add(btnNewButton_1_1);
-        // Button to set Traffic Light phase to Amber (yellow) 'y'
+
         JButton btnNewButton_1_1_1 = new JButton("Yellow");
         btnNewButton_1_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_1.addActionListener(new ActionListener() {
@@ -202,7 +203,7 @@ public class SumoTrafficControl extends JFrame {
         });
         btnNewButton_1_1_1.setBounds(153, 492, 133, 50);
         contentPane.add(btnNewButton_1_1_1);
-        // Button to set Traffic Light phase to Green without Priority 'g'
+
         JButton btnNewButton_1_1_2 = new JButton("Green (non-Priority)");
         btnNewButton_1_1_2.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_2.addActionListener(new ActionListener() {
@@ -212,32 +213,31 @@ public class SumoTrafficControl extends JFrame {
         });
         btnNewButton_1_1_2.setBounds(10, 572, 133, 50);
         contentPane.add(btnNewButton_1_1_2);
-        // Visual Labels to mark down the correct labels for the color adjustment
-        // Describes the Slider of the color which changes the red value
+
         JLabel lblNewLabel_2 = new JLabel("R");
         lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 18));
         lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
         lblNewLabel_2.setBounds(6, 209, 46, 14);
         contentPane.add(lblNewLabel_2);
-        // Describes the Slider of the color which changes the green value
+
         JLabel lblNewLabel_2_1 = new JLabel("G");
         lblNewLabel_2_1.setFont(new Font("Tahoma", Font.BOLD, 18));
         lblNewLabel_2_1.setHorizontalAlignment(SwingConstants.CENTER);
         lblNewLabel_2_1.setBounds(6, 234, 46, 14);
         contentPane.add(lblNewLabel_2_1);
-        // Describes the Slider of the color which changes the blue value
+
         JLabel lblNewLabel_2_2 = new JLabel("B");
         lblNewLabel_2_2.setFont(new Font("Tahoma", Font.BOLD, 18));
         lblNewLabel_2_2.setHorizontalAlignment(SwingConstants.CENTER);
         lblNewLabel_2_2.setBounds(6, 261, 46, 14);
         contentPane.add(lblNewLabel_2_2);
-        // Describes the Slider of the color which changes the alpha value
+
         JLabel lblNewLabel_2_3 = new JLabel("A");
         lblNewLabel_2_3.setFont(new Font("Tahoma", Font.BOLD, 18));
         lblNewLabel_2_3.setHorizontalAlignment(SwingConstants.CENTER);
         lblNewLabel_2_3.setBounds(6, 287, 46, 14);
         contentPane.add(lblNewLabel_2_3);
-        // Dropdown menu containing the traffic lights
+
         JComboBox<String> comboBox = new JComboBox<>();
         List<MyTrafficLight> trafficLights = mySystem.getTrafficLights();
         String[] trafficLightIds = trafficLights.stream()
@@ -261,29 +261,28 @@ public class SumoTrafficControl extends JFrame {
             }
         });
         contentPane.add(comboBox);
-        //Information-Textfield to show the color value when changing the slider
-        // color value red
+
         textField_Red = new JTextField();
         textField_Red.setEditable(false);
         textField_Red.setBounds(257, 211, 29, 20);
         textField_Red.setText(String.valueOf(slider_Red.getValue())); // <--- NEU
         contentPane.add(textField_Red);
         textField_Red.setColumns(10);
-        // color value green
+
         textField_Green = new JTextField();
         textField_Green.setEditable(false);
         textField_Green.setColumns(10);
         textField_Green.setBounds(257, 236, 29, 20);
         textField_Green.setText(String.valueOf(slider_Green.getValue())); // <--- NEU
         contentPane.add(textField_Green);
-        // color value blue
+
         textField_Blue = new JTextField();
         textField_Blue.setEditable(false);
         textField_Blue.setColumns(10);
         textField_Blue.setBounds(257, 263, 29, 20);
         textField_Blue.setText(String.valueOf(slider_Blue.getValue())); // <--- NEU
         contentPane.add(textField_Blue);
-        // color value alpha
+
         textField_Alpha = new JTextField();
         textField_Alpha.setEditable(false);
         textField_Alpha.setColumns(10);
