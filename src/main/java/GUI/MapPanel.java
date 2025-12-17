@@ -23,7 +23,7 @@ public class MapPanel extends JPanel {
     private double offsetX = 0;
     private double offsetY = 0;
 
-    //definition of constants for color, for readability
+    //definition of constants for color, for code readability
     private final Color COLOR_BACKGROUND = new Color(34, 100, 34);
     private final Color COLOR_ROAD_BORDER = Color.WHITE;
     private final Color COLOR_ASPHALT = Color.BLACK;
@@ -52,7 +52,7 @@ public class MapPanel extends JPanel {
 
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //aktiv Anti-Aliasing
-        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);//calculate road width mathematically
 
         //if no road is loaded, exit to prevent errors
         if (LaneLoader.myLanes == null || LaneLoader.myLanes.isEmpty()) {
