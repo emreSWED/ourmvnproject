@@ -1,6 +1,7 @@
 package GUI;
 import loader.VehicleAdder;
 import model.MyTrafficLight;
+import util.ConnectionManager;
 import util.MySystem;
 
 import java.awt.EventQueue;
@@ -37,48 +38,35 @@ public class SumoTrafficControl extends JFrame {
     private JTextField textField_Blue;
     private JTextField textField_Alpha;
 
-    // NEU: Hier speichern wir die Liste, die wir später bekommen
-    private List<MyTrafficLight> loadedTrafficLights = new ArrayList<>();
-    private String currentTrafficLightID = ""; // Die aktuell gewählte ID
+    private MapPanel mapPanel;
 
-    // NEU: Setter-Methode, um die Liste von außen (aus der Main) zu füllen
+    private ConnectionManager connectionManager;
+    private MySystem mySystem = new MySystem(connectionManager.traciConnection);
+    private List<MyTrafficLight> loadedTrafficLights = new ArrayList<>();
+    private String currentTrafficLightID = mySystem.getTrafficLights().getFirst().getId();
+    MyTrafficLight trafficLights = new MyTrafficLight(currentTrafficLightID, ConnectionManager.traciConnection);
+
     public void setTrafficLights(List<MyTrafficLight> lights) {
         this.loadedTrafficLights = lights;
     }
 
-    /**
-     * Launch the application.
-     *//*
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    SumoTrafficControl frame = new SumoTrafficControl();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    *//**
-     * Create the frame.
-     */
-    public SumoTrafficControl() {
-        //setResizable(true);
+    public SumoTrafficControl() throws Exception {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1200, 700);
+        setBounds(100, 100, 1300, 900);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
-        contentPane.setLayout(new BorderLayout());
+        contentPane.setLayout(null);
 
         JLabel lblNewLabel = new JLabel("Sumo Traffic Simulation");
         lblNewLabel.setBounds(10, 11, 1674, 93);
         lblNewLabel.setFont(new Font("Ink Free", Font.ITALIC, 60));
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
         contentPane.add(lblNewLabel);
+
+        mapPanel = new MapPanel();
+        mapPanel.setBounds(320, 110, 950, 740);
+        contentPane.add(mapPanel);
 
         // --- RED SLIDER ---
         JSlider slider_Red = new JSlider();
@@ -156,7 +144,7 @@ public class SumoTrafficControl extends JFrame {
         contentPane.add(btnStressTest);
 
         JButton btnAddVehicle = new JButton("Add Vehicle");
-       /* btnAddVehicle.addActionListener(new ActionListener() {
+        btnAddVehicle.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
                     VehicleAdder.addRandomVehicle();
@@ -164,7 +152,7 @@ public class SumoTrafficControl extends JFrame {
                     throw new RuntimeException(ex);
                 }
             }
-        });*/
+        });
         btnAddVehicle.setBounds(10, 320, 276, 50);
         contentPane.add(btnAddVehicle);
 
@@ -172,21 +160,39 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                trafficLights.setPhase("rrrrrrrrr");
             }
         });
         btnNewButton_1.setBounds(10, 492, 133, 50);
         contentPane.add(btnNewButton_1);
 
         JButton btnNewButton_1_1 = new JButton("Green (Priority)");
+        btnNewButton_1_1.setForeground(new Color(0, 0, 0));
+        btnNewButton_1_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                trafficLights.setPhase("GGGGGGGGG");
+            }
+        });
         btnNewButton_1_1.setBounds(153, 572, 133, 50);
         contentPane.add(btnNewButton_1_1);
 
-        JButton btnNewButton_1_1_1 = new JButton("Amber");
+        JButton btnNewButton_1_1_1 = new JButton("Yellow");
         btnNewButton_1_1_1.setForeground(new Color(0, 0, 0));
+        btnNewButton_1_1_1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                trafficLights.setPhase("yyyyyyyyy");
+            }
+        });
         btnNewButton_1_1_1.setBounds(153, 492, 133, 50);
         contentPane.add(btnNewButton_1_1_1);
 
         JButton btnNewButton_1_1_2 = new JButton("Green (non-Priority)");
+        btnNewButton_1_1_2.setForeground(new Color(0, 0, 0));
+        btnNewButton_1_1_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                trafficLights.setPhase("ggggggggg");
+            }
+        });
         btnNewButton_1_1_2.setBounds(10, 572, 133, 50);
         contentPane.add(btnNewButton_1_1_2);
 
@@ -215,49 +221,22 @@ public class SumoTrafficControl extends JFrame {
         contentPane.add(lblNewLabel_2_3);
 
         JComboBox<String> comboBox = new JComboBox<>();
-        comboBox.setModel(new DefaultComboBoxModel<>(new String[] {
-                "Traffic Light 1",
-                "Traffic Light 2",
-                "Traffic Light 3"
-        }));
+        List<MyTrafficLight> trafficLights = mySystem.getTrafficLights();
+        String[] trafficLightIds = trafficLights.stream()
+                .map(MyTrafficLight::getId)
+                .toArray(String[]::new);
+        comboBox.setModel(new DefaultComboBoxModel<>(
+                trafficLightIds
+        ));
         comboBox.setBounds(10, 442, 276, 39);
 
         comboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String selectedName = comboBox.getSelectedItem().toString();
+                currentTrafficLightID = comboBox.getSelectedItem().toString();
 
-                // Sicherheits-Check: Ist die Liste überhaupt schon da?
                 if (loadedTrafficLights == null || loadedTrafficLights.isEmpty()) {
                     System.out.println("Warnung: Noch keine Ampeln geladen!");
                     return;
-                }
-
-                // Zuordnung: Name -> Index in der Liste
-                switch (selectedName) {
-                    case "Traffic Light 1":
-                        // Prüfen, ob Index 0 existiert, dann ID holen
-                        if (loadedTrafficLights.size() > 0) {
-                            currentTrafficLightID = loadedTrafficLights.get(0).getId();
-                        }
-                        break;
-
-                    case "Traffic Light 2":
-                        // Prüfen, ob Index 1 existiert
-                        if (loadedTrafficLights.size() > 1) {
-                            currentTrafficLightID = loadedTrafficLights.get(1).getId();
-                        }
-                        break;
-
-                    case "Traffic Light 3":
-                        // Prüfen, ob Index 2 existiert
-                        if (loadedTrafficLights.size() > 2) {
-                            currentTrafficLightID = loadedTrafficLights.get(2).getId();
-                        }
-                        break;
-
-                    default:
-                        System.out.println("Unbekannte Auswahl");
-                        break;
                 }
 
                 System.out.println("Ausgewählte ID: " + currentTrafficLightID);
@@ -293,5 +272,11 @@ public class SumoTrafficControl extends JFrame {
         textField_Alpha.setText(String.valueOf(slider_Alpha.getValue())); // <--- NEU
         contentPane.add(textField_Alpha);
 
+    }
+
+    public void refreshMap(java.util.List<model.MyVehicle> vehicles) {
+        if (mapPanel != null) {
+            mapPanel.updateVehicles(vehicles);
+        }
     }
 }

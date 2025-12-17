@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import util.ConnectionManager;
 import util.MySystem;
 
@@ -25,11 +23,12 @@ import util.MySystem;
 import model.MyVehicle;
 
 public class Main {
-    private static final Logger LOG = LogManager.getLogger(Main.class.getName());
 
+    static GUI.SumoTrafficControl gui;
     public static void main(String[] args) throws Exception {
 
-        LOG.info("initializing connection to SUMO");
+
+
         ConnectionManager conn = new ConnectionManager("SumoConfig/myconfig.sumocfg");
         conn.startConnection();
         RouteGenerator.conn = conn;
@@ -37,7 +36,7 @@ public class Main {
         VehicleAdder.conn = conn;
         SimulationWindowBounds simulationWindowBounds = new SimulationWindowBounds(conn);
 
-        MySystem mySystem = new MySystem(conn);
+        MySystem mySystem = new MySystem(conn.traciConnection);
         LaneLoader currentLanes = new LaneLoader(conn);
 
         RouteGenerator routeGenerator = new RouteGenerator();
@@ -71,28 +70,32 @@ public class Main {
         List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
         System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
 
-        LOG.info("Starting application...");
-        EventQueue.invokeLater(new Runnable() {
+        /*EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
                     SumoTrafficControl frame = new SumoTrafficControl();
                     frame.setTrafficLights(trafficLightsList);
                     frame.setVisible(true);
                 } catch (Exception e) {
-                    LOG.warn("Handled exception in main.");
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
 
         System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
 
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            new SumoTrafficControl();
+        javax.swing.SwingUtilities.invokeAndWait(() -> {
+            try {
+                gui = new GUI.SumoTrafficControl();
+                gui.setTrafficLights(trafficLightsList);
+                gui.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
 
-       /* javax.swing.SwingUtilities.invokeLater(() -> {
+        /*javax.swing.SwingUtilities.invokeLater(() -> {
             new PrincipalComp();
         });*/
         //da doppelt oben
@@ -111,11 +114,20 @@ public class Main {
         for (int step = 0; step < 10000; step++) {
             conn.step();
 
+            if (gui != null) {
+                gui.refreshMap(mySystem.getVehicles());
+            }
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
             System.out.println("List of cars in simulation: " + mySystem.getVehicles());
 
             if (step == 20) {
-                MyTrafficLight t1 = new MyTrafficLight("254384053", conn.traciConnection);
+                MyTrafficLight t1 = new MyTrafficLight("254384053", ConnectionManager.traciConnection);
                 //t1.setPhase();
             }
 
