@@ -1,4 +1,5 @@
 package GUI;
+import de.tudresden.sumo.cmd.Vehicle;
 import loader.VehicleAdder;
 import model.MyTrafficLight;
 import util.ConnectionManager;
@@ -141,6 +142,22 @@ public class SumoTrafficControl extends JFrame {
         //Stress Test button, which adds more vehicles and sets the traffic lights to the phase 'G'
         JButton btnStressTest = new JButton("Stress Test");
         btnStressTest.setBounds(10, 800, 276, 50);
+        btnStressTest.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    trafficLights.setPhase("GGGGGGGGG");
+                    for(int i = 0; i<100; i++)
+                    {
+                        VehicleAdder.addRandomVehicle();
+                    }
+
+                }
+                catch(Exception exception){
+                    throw new RuntimeException(exception);
+                }
+            }
+        });
         contentPane.add(btnStressTest);
         //Injects another Vehicle into the simulation
         JButton btnAddVehicle = new JButton("Add Vehicle");
