@@ -1,14 +1,13 @@
 package GUI;
 
 import loader.LaneLoader;
-import loader.MyLane;
+import model.MyLane;
 import loader.YCoordinateFlipper;
 import model.MyVehicle;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;

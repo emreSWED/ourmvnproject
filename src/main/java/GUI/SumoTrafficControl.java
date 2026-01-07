@@ -129,15 +129,23 @@ public class SumoTrafficControl extends JFrame {
         lblNewLabel_1.setBounds(10, 144, 276, 50);
         contentPane.add(lblNewLabel_1);
 
-        JButton btnNewButton = new JButton("START");
-        btnNewButton.addActionListener(new ActionListener() {
+        JButton btnStart = new JButton("START");
+        btnStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                MySystem.stopped = false;
+                System.out.println("Started simulation");
             }
         });
-        btnNewButton.setBounds(10, 72, 133, 50);
-        contentPane.add(btnNewButton);
+        btnStart.setBounds(10, 72, 133, 50);
+        contentPane.add(btnStart);
 
         JButton btnStop = new JButton("STOP");
+        btnStop.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                MySystem.stopped = true;
+                System.out.println("Stopped simulation");
+            }
+        });
         btnStop.setBounds(153, 72, 133, 50);
         contentPane.add(btnStop);
 

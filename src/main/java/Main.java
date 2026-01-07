@@ -1,18 +1,10 @@
-import GUI.PrincipalComp;
-import GUI.SumoTrafficControl;
 import de.tudresden.sumo.cmd.*;
 import de.tudresden.sumo.objects.SumoColor;
-import de.tudresden.sumo.objects.SumoLink;
-import de.tudresden.sumo.objects.SumoLinkList;
-import de.tudresden.sumo.objects.SumoTLSController;
-import de.tudresden.sumo.util.*;
-import it.polito.appeal.traci.*;
 
 import loader.*;
+import model.MyLane;
 import model.MyTrafficLight;
 
-import java.awt.*;
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -117,7 +109,7 @@ public class Main {
         LaneLoader.printAllLaneIDs();
 
         for (int step = 0; step < 10000; step++) {
-            conn.step();
+            if (!MySystem.stopped) conn.step();
 
             if (gui != null) {
                 gui.refreshMap(mySystem.getVehicles());
@@ -130,7 +122,7 @@ public class Main {
 
             System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
             System.out.println("List of cars in simulation: " + mySystem.getVehicles());
-
+            /*
             if (step == 20) {
                 MyTrafficLight t1 = new MyTrafficLight("254384053", ConnectionManager.traciConnection);
                 //t1.setPhase();
@@ -142,6 +134,7 @@ public class Main {
                 v.setSpeed(1.0);
                 System.out.println(v.getX() + ", " + v.getY() + ", " + v.getSpeed() + ", " + v.getId());
             }
+
 
             for (MyTrafficLight t : trafficLights) {
                 System.out.println("ID: " + t.getId());
@@ -155,7 +148,7 @@ public class Main {
             for (MyTrafficLight t : trafficLightsList) {
                 System.out.println("ID: " + t.getId() + " State: " + t.getState());
             }
-
+            */
             TimeUnit.MILLISECONDS.sleep(100);
         }
         //SOME TESTS
