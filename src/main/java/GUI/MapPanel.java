@@ -7,14 +7,21 @@ import model.MyVehicle;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapPanel extends JPanel {
 
     private List<MyVehicle> currentVehicles = new ArrayList<>(); //save list of Vehicles we want to draw
+    private final Map<MyVehicle, Shape> carHitboxes = new HashMap<>();
+    private MyVehicle selectedCar = null;
 
     //Camera system: for coordinate transformation from huge values in small window values
     private boolean boundsCalculated = false;
@@ -34,6 +41,13 @@ public class MapPanel extends JPanel {
     //constructor
     public MapPanel() {
         this.setBackground(COLOR_BACKGROUND);   //color of meadow
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("Clicked on MapPanel");
+            }
+        });
     }
 
     //interface to the outside, Main calls up this method, when new cars
@@ -183,6 +197,7 @@ public class MapPanel extends JPanel {
 
     private void drawCars(Graphics2D g2d) {
 
+        carHitboxes.clear();
         g2d.setColor(COLOR_CAR);
 
         double carLength = 4.5;
@@ -190,35 +205,38 @@ public class MapPanel extends JPanel {
 
         for (MyVehicle car : currentVehicles) {
             double rx = car.getX();
-
-            //hier we have to flip the coordinates
             double ry = YCoordinateFlipper.flipYCoords(car.getY());
-            double angle = car.getAngle(); // 0 = North  90 = East
+            double angle = car.getAngle();
 
-            //save camera state
             AffineTransform original = g2d.getTransform();
 
-            //move pointer to car position
             g2d.translate(rx, ry);
-            //rotate our "rectangle" around the car's center
             g2d.rotate(Math.toRadians(angle));
 
-            //define car shape centered (0,0)
-            Rectangle2D.Double carShape = new Rectangle2D.Double(
-                    -carWidth / 2, -carLength / 2, carWidth, carLength
+            Rectangle2D.Double localShape = new Rectangle2D.Double(
+                    -carWidth / 2,
+                    -carLength / 2,
+                    carWidth,
+                    carLength
             );
 
-            //Draw car body
-            g2d.fill(carShape);
+            Shape worldShape =
+                    g2d.getTransform().createTransformedShape(localShape);
 
-            //Draw outline for visibility
+            carHitboxes.put(car, worldShape);
+
+            if (car == selectedCar) {
+                g2d.setColor(Color.RED);
+            }
+
+            g2d.fill(localShape);
+
             g2d.setColor(Color.BLACK);
-            g2d.setStroke(new BasicStroke(0.2f));
-            g2d.draw(carShape);
+            g2d.draw(localShape);
 
-            //Reset color and reset camera for next car
             g2d.setColor(COLOR_CAR);
             g2d.setTransform(original);
         }
     }
+
 }
