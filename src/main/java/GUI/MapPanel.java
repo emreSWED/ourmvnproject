@@ -54,12 +54,23 @@ public class MapPanel extends JPanel {
 
                     Point2D worldPoint = cam.createInverse().transform(e.getPoint(), null);
 
+                    boolean shift = e.isShiftDown();
+
                     for (Map.Entry<MyVehicle, Shape> entry : carHitboxes.entrySet()) {
                         if (entry.getValue().contains(worldPoint)) {
                             MyVehicle car = entry.getKey();
                             System.out.println("Clicked on car: " + car.getId());
-                            MySystem.selectedVehicles.clear();
-                            MySystem.selectedVehicles.add(car);
+
+                            if (!shift) {
+                                MySystem.selectedVehicles.clear();
+                                MySystem.selectedVehicles.add(car);
+                            } else {
+                                if (!MySystem.selectedVehicles.remove(car)) {
+                                    MySystem.selectedVehicles.add(car);
+                                }
+                            }
+
+                            System.out.println("All selected cars: " + MySystem.selectedVehicles);
                             repaint();
                             return;
                         }

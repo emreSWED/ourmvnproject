@@ -27,7 +27,8 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;import java.util.List;
+import javax.swing.event.ChangeEvent;
+import java.util.List;
 import java.util.ArrayList;
 
 
@@ -132,12 +133,16 @@ public class SumoTrafficControl extends JFrame {
         JButton btnStart = new JButton("START");
         btnStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MySystem.stopped = false;
+                synchronized (MySystem.stepLock) {
+                    MySystem.stopped = false;
+                    MySystem.stepLock.notifyAll();
+                }
                 System.out.println("Started simulation");
             }
         });
         btnStart.setBounds(10, 72, 133, 50);
         contentPane.add(btnStart);
+
 
         JButton btnStop = new JButton("STOP");
         btnStop.addActionListener(new ActionListener() {

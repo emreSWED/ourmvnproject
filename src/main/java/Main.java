@@ -40,44 +40,10 @@ public class Main {
         VehicleAdder vehicleAdder = new VehicleAdder();
         YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
 
-        //get map data for UI
-       // List<String> trafficLights = conn.getTrafficLights();
-       // List<String> lanes = (List<String>) conn.dojobget(Lane.getIDList());
-       // JunctionLoader junctions = new JunctionLoader(conn.traciConnection);
-
-        //github test 17:32
-      // System.out.println("current number of traffic lights: " + trafficLights.size());
-      //  System.out.println("ID of Traffic lights:"+ conn.getTrafficLights());
-       // System.out.println("ID of first Lane:"+ lanes.getFirst());
-       // System.out.println(conn.dojobget(Lane.getShape(lanes.getFirst())));
-      //  System.out.println("Positions of Junctions:" + junctions.JunctionPositionList);
-       // System.out.println("Links:"+ conn.dojobget(Lane.getLinks(lanes.getFirst())));
-       // SumoLinkList links = new SumoLinkList();
-       // links = (SumoLinkList) conn.dojobget(Lane.getLinks(lanes.getFirst()));
-       // System.out.println(" First list of links for first Lane:"+ links);
-       // trafficLightLanes  = conn.dojobget(Trafficlight.getControlledJunctions(trafficLights.getFirst()));
-       // System.out.println("Controlled links by traffic light 1: " + trafficLightLinks);
-        //System.out.println("First link :"+ trafficLightLinks.getFirst());
-
-        int numberOfTrafficLights = (int) conn.dojobget(Trafficlight.getIDCount());
-        System.out.println("Number of Traffic Lights: " + numberOfTrafficLights);
-
-        // Hier holen wir die Liste für die GUI
         List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
         System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
 
         LOG.info("Starting application...");
-        /*EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    SumoTrafficControl frame = new SumoTrafficControl();
-                    frame.setTrafficLights(trafficLightsList);
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });*/
 
         System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
 
@@ -92,32 +58,26 @@ public class Main {
         });
 
 
-        /*javax.swing.SwingUtilities.invokeLater(() -> {
-            new PrincipalComp();
-        });*/
-        //da doppelt oben
-        //int numberOfTrafficLights = (int)conn.dojobget(Trafficlight.getIDCount());
-        System.out.println("Number of Traffic Lights: " + numberOfTrafficLights);
 
-        List<MyTrafficLight> trafficLights = mySystem.getTrafficLights();
-        System.out.println("List of Traffic Lights: " + trafficLights);
+        int step = 0;
 
-        System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
-        //Last coordinates on Lanes "going from" are those where traffic lights should be placed. In this case: 85.42, 107.99 since
-        //its the first in List of controlled links.
+        while (MySystem.running) {
 
-        LaneLoader.printAllLaneIDs();
+            synchronized (MySystem.stepLock) {
+                while (MySystem.stopped) {
+                    try {
+                        MySystem.stepLock.wait();
+                    } catch (InterruptedException e) {
+                        return;
+                    }
+                }
+            }
 
-        for (int step = 0; step < 10000; step++) {
-            if (!MySystem.stopped) conn.step();
+            conn.step();
+            step++;
 
             if (gui != null) {
                 gui.refreshMap(mySystem.getVehicles());
-            }
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
 
             System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
@@ -125,14 +85,19 @@ public class Main {
 
             List<MyVehicle> vehicles = mySystem.getVehicles();
             for (MyVehicle v : vehicles) {
-                if (step % 10 == 0) v.setColor(new SumoColor(255,0,0,255));
-                if (step % 10 == 3) v.setColor(new SumoColor(0,255,0,255));
-                if (step % 10 == 7) v.setColor(new SumoColor(0,9,255,255));
+                if (step % 10 == 0) v.setColor(new SumoColor(255, 0, 0, 255));
+                if (step % 10 == 3) v.setColor(new SumoColor(0, 255, 0, 255));
+                if (step % 10 == 7) v.setColor(new SumoColor(0, 9, 255, 255));
                 System.out.println(v.getX() + ", " + v.getY() + ", " + v.getSpeed() + ", " + v.getId() + ", " + v.getColor());
             }
 
-            TimeUnit.MILLISECONDS.sleep(1000);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                return;
+            }
         }
+
         //SOME TESTS
         conn.stopConnection();
         System.out.println("Connection closed.");
