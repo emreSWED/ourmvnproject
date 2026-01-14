@@ -20,8 +20,8 @@ public class MyLane {
 
 
    public double[] xpositions;
-   public double[] ypositions;
-   public double[] testing;
+   public double[] zspositions;
+
 
 
 
