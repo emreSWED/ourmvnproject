@@ -13,6 +13,8 @@ import java.util.List;
 public class MySystem {
     public SumoTraciConnection traciConnection;
     public static boolean stopped = false;
+    public static List<MyVehicle> selectedVehicles;
+    public static List<MyTrafficLight> selectedTrafficLights;
 
     public MySystem(SumoTraciConnection connection) {
         this.traciConnection = connection;

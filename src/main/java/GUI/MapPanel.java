@@ -4,6 +4,7 @@ import loader.LaneLoader;
 import model.MyLane;
 import loader.YCoordinateFlipper;
 import model.MyVehicle;
+import util.MySystem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +22,6 @@ public class MapPanel extends JPanel {
 
     private List<MyVehicle> currentVehicles = new ArrayList<>(); //save list of Vehicles we want to draw
     private final Map<MyVehicle, Shape> carHitboxes = new HashMap<>();
-    private MyVehicle selectedCar = null;
     private final CarRenderer carRenderer = new CarRenderer();
 
     //Camera system: for coordinate transformation from huge values in small window values
@@ -38,6 +38,7 @@ public class MapPanel extends JPanel {
     private final Color COLOR_CAR = new Color(0, 255, 255);
 
     private final double LANE_WIDTH = 3.5;
+    private Point2D debugClickPoint = null;
 
     //constructor
     public MapPanel() {
@@ -46,21 +47,30 @@ public class MapPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                Point p = e.getPoint();
-                MyVehicle clicked = null;
+                try {
+                    AffineTransform cam = new AffineTransform();
+                    cam.translate(offsetX, offsetY);
+                    cam.scale(scaleFactor, scaleFactor);
 
-                for (Map.Entry<MyVehicle, Shape> entry : carHitboxes.entrySet()) {
-                    if (entry.getValue().contains(p)) {
-                        clicked = entry.getKey();
-                        break;
+                    Point2D worldPoint = cam.createInverse().transform(e.getPoint(), null);
+
+                    for (Map.Entry<MyVehicle, Shape> entry : carHitboxes.entrySet()) {
+                        if (entry.getValue().contains(worldPoint)) {
+                            MyVehicle car = entry.getKey();
+                            System.out.println("Clicked on car: " + car.getId());
+                            MySystem.selectedVehicles.clear();
+                            MySystem.selectedVehicles.add(car);
+                            repaint();
+                            return;
+                        }
                     }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-
-                selectedCar = clicked;
-                repaint();
             }
         });
     }
+
 
     //interface to the outside, Main calls up this method, when new cars
     public void updateVehicles(List<MyVehicle> vehicles) {
@@ -173,12 +183,43 @@ public class MapPanel extends JPanel {
     private void drawCars(Graphics2D g2d) {
 
         carHitboxes.clear();
-        g2d.setColor(COLOR_CAR);
+
+        double carLength = 4.5;
+        double carWidth = 2.0;
 
         for (MyVehicle car : currentVehicles) {
-            Shape worldShape = carRenderer.draw(g2d, car);
 
+            double rx = car.getX();
+            double ry = YCoordinateFlipper.flipYCoords(car.getY());
+            double angle = car.getAngle();
+
+            AffineTransform original = g2d.getTransform();
+
+            g2d.translate(rx, ry);
+            g2d.rotate(Math.toRadians(angle));
+
+            Rectangle2D.Double localShape = new Rectangle2D.Double(
+                    -carWidth / 2,
+                    -carLength / 2,
+                    carWidth,
+                    carLength
+            );
+
+            g2d.setColor(car.getColor());
+            g2d.fill(localShape);
+
+            g2d.setColor(Color.BLACK);
+            g2d.draw(localShape);
+
+            g2d.setTransform(original);
+
+            AffineTransform t = new AffineTransform();
+            t.translate(rx, ry);
+            t.rotate(Math.toRadians(angle));
+
+            Shape worldShape = t.createTransformedShape(localShape);
             carHitboxes.put(car, worldShape);
         }
     }
+
 }

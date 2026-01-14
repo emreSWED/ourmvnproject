@@ -33,7 +33,10 @@ public class CarRenderer {
         g2d.setColor(car.getColor());
         g2d.draw(localShape);
 
-        Shape worldShape = g2d.getTransform().createTransformedShape(localShape);
+        AffineTransform t = new AffineTransform();
+        t.translate(rx, ry);
+        t.rotate(Math.toRadians(angle));
+        Shape worldShape = t.createTransformedShape(localShape);
 
         g2d.setTransform(original);
 

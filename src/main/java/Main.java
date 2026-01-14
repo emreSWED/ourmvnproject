@@ -131,7 +131,7 @@ public class Main {
                 System.out.println(v.getX() + ", " + v.getY() + ", " + v.getSpeed() + ", " + v.getId() + ", " + v.getColor());
             }
 
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(1000);
         }
         //SOME TESTS
         conn.stopConnection();
