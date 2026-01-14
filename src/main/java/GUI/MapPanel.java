@@ -22,6 +22,7 @@ public class MapPanel extends JPanel {
     private List<MyVehicle> currentVehicles = new ArrayList<>(); //save list of Vehicles we want to draw
     private final Map<MyVehicle, Shape> carHitboxes = new HashMap<>();
     private MyVehicle selectedCar = null;
+    private final CarRenderer carRenderer = new CarRenderer();
 
     //Camera system: for coordinate transformation from huge values in small window values
     private boolean boundsCalculated = false;
@@ -45,7 +46,18 @@ public class MapPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("Clicked on MapPanel");
+                Point p = e.getPoint();
+                MyVehicle clicked = null;
+
+                for (Map.Entry<MyVehicle, Shape> entry : carHitboxes.entrySet()) {
+                    if (entry.getValue().contains(p)) {
+                        clicked = entry.getKey();
+                        break;
+                    }
+                }
+
+                selectedCar = clicked;
+                repaint();
             }
         });
     }
@@ -158,85 +170,15 @@ public class MapPanel extends JPanel {
         }
     }
 
-    /*private void drawStopLines(Graphics2D g2d) {
-        g2d.setColor(Color.WHITE);
-        g2d.setStroke(new BasicStroke(0.6f));
-
-        for (MyLane lane : LaneLoader.myLanes) {
-            //2 points needed for direction of lines
-            if (lane.xpositions != null && lane.xpositions.length > 1) {
-                int last = lane.xpositions.length - 1;
-
-                //get coordinates of last segment of the lane
-                double endX = lane.xpositions[last];
-                double endY = lane.ypositions[last];
-                double prevX = lane.xpositions[last - 1];
-                double prevY = lane.ypositions[last - 1];
-
-                //calculating direction of the road
-                double dx = endX - prevX;
-                double dy = endY - prevY;
-                double len = Math.sqrt(dx*dx + dy*dy);
-
-
-                if (len < 0.1) continue;
-
-                dx /= len; dy /= len;
-                double perpX = -dy; double perpY = dx;
-
-
-                double w = LANE_WIDTH * 0.45;
-
-                g2d.draw(new Line2D.Double(
-                        endX - perpX * w, endY - perpY * w,
-                        endX + perpX * w, endY + perpY * w
-                ));
-            }
-        }
-    }*/
-
     private void drawCars(Graphics2D g2d) {
 
         carHitboxes.clear();
         g2d.setColor(COLOR_CAR);
 
-        double carLength = 4.5;
-        double carWidth = 2.0;
-
         for (MyVehicle car : currentVehicles) {
-            double rx = car.getX();
-            double ry = YCoordinateFlipper.flipYCoords(car.getY());
-            double angle = car.getAngle();
-
-            AffineTransform original = g2d.getTransform();
-
-            g2d.translate(rx, ry);
-            g2d.rotate(Math.toRadians(angle));
-
-            Rectangle2D.Double localShape = new Rectangle2D.Double(
-                    -carWidth / 2,
-                    -carLength / 2,
-                    carWidth,
-                    carLength
-            );
-
-            Shape worldShape =
-                    g2d.getTransform().createTransformedShape(localShape);
+            Shape worldShape = carRenderer.draw(g2d, car);
 
             carHitboxes.put(car, worldShape);
-
-            if (car == selectedCar) {
-                g2d.setColor(Color.RED);
-            }
-
-            g2d.fill(localShape);
-
-            g2d.setColor(Color.BLACK);
-            g2d.draw(localShape);
-
-            g2d.setColor(COLOR_CAR);
-            g2d.setTransform(original);
         }
     }
-
 }
