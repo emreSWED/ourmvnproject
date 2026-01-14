@@ -1,4 +1,4 @@
-package loader;
+package model;
 
 public class MyJunction {
 }

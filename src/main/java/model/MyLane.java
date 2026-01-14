@@ -1,12 +1,10 @@
-package loader;
+package model;
 
 import java.awt.geom.Path2D;
-import java.util.ArrayList;
-import java.util.List;
 
+import loader.YCoordinateFlipper;
 import util.ConnectionManager;
 import de.tudresden.sumo.cmd.Lane;
-import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.objects.SumoGeometry;
 
 //LaneLoader and MyLane classes work together to create all the instances of MyLane objects containing Path2D which is essential for rendering on Graphics2D
