@@ -1,21 +1,28 @@
 package GUI;
 
 import loader.LaneLoader;
-import loader.MyLane;
+import model.MyLane;
 import loader.YCoordinateFlipper;
 import model.MyVehicle;
+import util.MySystem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapPanel extends JPanel {
 
     private List<MyVehicle> currentVehicles = new ArrayList<>(); //save list of Vehicles we want to draw
+    private final Map<MyVehicle, Shape> carHitboxes = new HashMap<>();
+    private final CarRenderer carRenderer = new CarRenderer();
 
     //Camera system: for coordinate transformation from huge values in small window values
     private boolean boundsCalculated = false;
@@ -28,15 +35,53 @@ public class MapPanel extends JPanel {
     private final Color COLOR_ROAD_BORDER = Color.WHITE;
     private final Color COLOR_ASPHALT = Color.BLACK;
     private final Color COLOR_DASH = Color.WHITE;
-    private  Color COLOR_CAR = new Color(0, 255, 255);
-
+    private final Color COLOR_CAR = new Color(0, 255, 255);
 
     private final double LANE_WIDTH = 3.5;
+    private Point2D debugClickPoint = null;
 
     //constructor
     public MapPanel() {
         this.setBackground(COLOR_BACKGROUND);   //color of meadow
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    AffineTransform cam = new AffineTransform();
+                    cam.translate(offsetX, offsetY);
+                    cam.scale(scaleFactor, scaleFactor);
+
+                    Point2D worldPoint = cam.createInverse().transform(e.getPoint(), null);
+
+                    boolean shift = e.isShiftDown();
+
+                    for (Map.Entry<MyVehicle, Shape> entry : carHitboxes.entrySet()) {
+                        if (entry.getValue().contains(worldPoint)) {
+                            MyVehicle car = entry.getKey();
+                            System.out.println("Clicked on car: " + car.getId());
+
+                            if (!shift) {
+                                MySystem.selectedVehicles.clear();
+                                MySystem.selectedVehicles.add(car);
+                            } else {
+                                if (!MySystem.selectedVehicles.remove(car)) {
+                                    MySystem.selectedVehicles.add(car);
+                                }
+                            }
+
+                            System.out.println("All selected cars: " + MySystem.selectedVehicles);
+                            repaint();
+                            return;
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
+
 
     //interface to the outside, Main calls up this method, when new cars
     public void updateVehicles(List<MyVehicle> vehicles) {
@@ -146,81 +191,46 @@ public class MapPanel extends JPanel {
         }
     }
 
-    /*private void drawStopLines(Graphics2D g2d) {
-        g2d.setColor(Color.WHITE);
-        g2d.setStroke(new BasicStroke(0.6f));
-
-        for (MyLane lane : LaneLoader.myLanes) {
-            //2 points needed for direction of lines
-            if (lane.xpositions != null && lane.xpositions.length > 1) {
-                int last = lane.xpositions.length - 1;
-
-                //get coordinates of last segment of the lane
-                double endX = lane.xpositions[last];
-                double endY = lane.ypositions[last];
-                double prevX = lane.xpositions[last - 1];
-                double prevY = lane.ypositions[last - 1];
-
-                //calculating direction of the road
-                double dx = endX - prevX;
-                double dy = endY - prevY;
-                double len = Math.sqrt(dx*dx + dy*dy);
-
-
-                if (len < 0.1) continue;
-
-                dx /= len; dy /= len;
-                double perpX = -dy; double perpY = dx;
-
-
-                double w = LANE_WIDTH * 0.45;
-
-                g2d.draw(new Line2D.Double(
-                        endX - perpX * w, endY - perpY * w,
-                        endX + perpX * w, endY + perpY * w
-                ));
-            }
-        }
-    }*/
-
     private void drawCars(Graphics2D g2d) {
 
-        g2d.setColor(SumoTrafficControl.getCarColor());
+        carHitboxes.clear();
 
         double carLength = 4.5;
         double carWidth = 2.0;
 
         for (MyVehicle car : currentVehicles) {
+
             double rx = car.getX();
-
-            //hier we have to flip the coordinates
             double ry = YCoordinateFlipper.flipYCoords(car.getY());
-            double angle = car.getAngle(); // 0 = North  90 = East
+            double angle = car.getAngle();
 
-            //save camera state
             AffineTransform original = g2d.getTransform();
 
-            //move pointer to car position
             g2d.translate(rx, ry);
-            //rotate our "rectangle" around the car's center
             g2d.rotate(Math.toRadians(angle));
 
-            //define car shape centered (0,0)
-            Rectangle2D.Double carShape = new Rectangle2D.Double(
-                    -carWidth / 2, -carLength / 2, carWidth, carLength
+            Rectangle2D.Double localShape = new Rectangle2D.Double(
+                    -carWidth / 2,
+                    -carLength / 2,
+                    carWidth,
+                    carLength
             );
 
-            //Draw car body
-            g2d.fill(carShape);
+            g2d.setColor(car.getColor());
+            g2d.fill(localShape);
 
-            //Draw outline for visibility
             g2d.setColor(Color.BLACK);
-            g2d.setStroke(new BasicStroke(0.2f));
-            g2d.draw(carShape);
+            g2d.draw(localShape);
 
-            //Reset color and reset camera for next car
-            g2d.setColor(SumoTrafficControl.getCarColor());
             g2d.setTransform(original);
+
+            AffineTransform t = new AffineTransform();
+            t.translate(rx, ry);
+            t.rotate(Math.toRadians(angle));
+
+            Shape worldShape = t.createTransformedShape(localShape);
+            carHitboxes.put(car, worldShape);
         }
     }
+
 }

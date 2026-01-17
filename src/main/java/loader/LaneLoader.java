@@ -7,6 +7,7 @@ import de.tudresden.sumo.objects.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.MyLane;
 import util.ConnectionManager;
 
 public class LaneLoader {
