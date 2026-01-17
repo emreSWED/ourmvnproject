@@ -1,4 +1,5 @@
 package GUI;
+import de.tudresden.sumo.cmd.Vehicle;
 import loader.VehicleAdder;
 import model.MyTrafficLight;
 import util.ConnectionManager;
@@ -26,7 +27,8 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;import java.util.List;
+import javax.swing.event.ChangeEvent;
+import java.util.List;
 import java.util.ArrayList;
 
 
@@ -128,20 +130,48 @@ public class SumoTrafficControl extends JFrame {
         lblNewLabel_1.setBounds(10, 144, 276, 50);
         contentPane.add(lblNewLabel_1);
 
-        JButton btnNewButton = new JButton("START");
-        btnNewButton.addActionListener(new ActionListener() {
+        JButton btnStart = new JButton("START");
+        btnStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                synchronized (MySystem.stepLock) {
+                    MySystem.stopped = false;
+                    MySystem.stepLock.notifyAll();
+                }
+                System.out.println("Started simulation");
             }
         });
-        btnNewButton.setBounds(10, 72, 133, 50);
-        contentPane.add(btnNewButton);
+        btnStart.setBounds(10, 72, 133, 50);
+        contentPane.add(btnStart);
+
 
         JButton btnStop = new JButton("STOP");
+        btnStop.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                MySystem.stopped = true;
+                System.out.println("Stopped simulation");
+            }
+        });
         btnStop.setBounds(153, 72, 133, 50);
         contentPane.add(btnStop);
 
         JButton btnStressTest = new JButton("Stress Test");
         btnStressTest.setBounds(10, 800, 276, 50);
+        btnStressTest.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    trafficLights.setPhase("GGGGGGGGG");
+                    for(int i = 0; i<100; i++)
+                    {
+                        VehicleAdder.addRandomVehicle();
+                    }
+
+                }
+                catch(Exception exception){
+                    throw new RuntimeException(exception);
+                }
+            }
+        });
         contentPane.add(btnStressTest);
 
         JButton btnAddVehicle = new JButton("Add Vehicle");

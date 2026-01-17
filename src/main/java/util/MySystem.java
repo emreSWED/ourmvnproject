@@ -12,6 +12,12 @@ import java.util.List;
 
 public class MySystem {
     public SumoTraciConnection traciConnection;
+    public static volatile boolean running = true;
+    public static volatile boolean stopped = false;
+    public static final Object stepLock = new Object();
+
+    public static List<MyVehicle> selectedVehicles = new ArrayList<>();
+    public static List<MyTrafficLight> selectedTrafficLights =  new ArrayList<>();
 
     public MySystem(SumoTraciConnection connection) {
         this.traciConnection = connection;
