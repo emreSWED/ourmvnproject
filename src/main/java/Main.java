@@ -1,33 +1,23 @@
-import GUI.PrincipalComp;
 import GUI.SumoTrafficControl;
 import de.tudresden.sumo.cmd.*;
-import de.tudresden.sumo.objects.SumoColor;
-import de.tudresden.sumo.objects.SumoLink;
-import de.tudresden.sumo.objects.SumoLinkList;
-import de.tudresden.sumo.objects.SumoTLSController;
-import de.tudresden.sumo.util.*;
-import it.polito.appeal.traci.*;
 
 import loader.*;
 import model.MyTrafficLight;
 
-import java.awt.*;
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import model.MyVehicle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import util.ConnectionManager;
 import util.MySystem;
 
-
-import model.MyVehicle;
-
 public class Main {
 
     static GUI.SumoTrafficControl gui;
     private static final Logger LOG = LogManager.getLogger(Main.class.getName());
+
     public static void main(String[] args) throws Exception {
 
         LOG.info("initializing connection to SUMO");
@@ -41,6 +31,8 @@ public class Main {
         SimulationWindowBounds simulationWindowBounds = new SimulationWindowBounds(conn);
 
         MySystem mySystem = new MySystem(conn.traciConnection);
+
+
         LaneLoader currentLanes = new LaneLoader(conn);
 
         RouteGenerator routeGenerator = new RouteGenerator();
@@ -74,7 +66,7 @@ public class Main {
         List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
         System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
 
-        LOG.info("Starting application...");
+
         /*EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
@@ -89,15 +81,18 @@ public class Main {
 
         System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
 
+
+        LOG.info("Starting application...");
         javax.swing.SwingUtilities.invokeAndWait(() -> {
             try {
                 gui = new GUI.SumoTrafficControl();
                 gui.setTrafficLights(trafficLightsList);
                 gui.setVisible(true);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Error initializing Graphic interface",e);
             }
         });
+
 
 
         /*javax.swing.SwingUtilities.invokeLater(() -> {
@@ -125,11 +120,18 @@ public class Main {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                //then using Log
+                LOG.warn("Handled exception in main.",e);
             }
+
 
             System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
             System.out.println("List of cars in simulation: " + mySystem.getVehicles());
+
+
+            //newly added to show total number of vehicles in simulation in a Label
+            SumoTrafficControl.setInfoCountVehText(SumoTrafficControl.getStringVehiclesCount(mySystem.getVehicles().size()));
 
             if (step == 20) {
                 MyTrafficLight t1 = new MyTrafficLight("254384053", ConnectionManager.traciConnection);
@@ -138,7 +140,7 @@ public class Main {
 
             List<MyVehicle> vehicles = mySystem.getVehicles();
             for (MyVehicle v : vehicles) {
-                v.setColor(v.getId(), new SumoColor(0xFF,0xFF,0xFF,0x00));
+                v.setColor(v.getId(), SumoTrafficControl.getCarSColor());
                 v.setSpeed(1.0);
                 System.out.println(v.getX() + ", " + v.getY() + ", " + v.getSpeed() + ", " + v.getId());
             }
@@ -158,8 +160,13 @@ public class Main {
 
             TimeUnit.MILLISECONDS.sleep(100);
         }
+
         //SOME TESTS
         conn.stopConnection();
-        System.out.println("Connection closed.");
+        //System.out.println("Connection closed.");
+        LOG.info("Application finished.");
+
+
     }
+
 }

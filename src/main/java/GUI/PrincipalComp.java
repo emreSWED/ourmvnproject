@@ -61,14 +61,14 @@ public class PrincipalComp extends JFrame{
         slider.setPaintLabels(true);
         slider.setLabelTable(slider.createStandardLabels(20));
         //experiment with Veh
-        MyVehicle car1 = new MyVehicle("Car1",conn);
+        //MyVehicle car1 = new MyVehicle("Car1",conn);
 
         //event listener of slider for speed. Its going to use method from class MyVehicle
         slider.addChangeListener(e->{
             if(!slider.getValueIsAdjusting()){
                 double currentValue = slider.getValue();
                 System.out.println("Slider Value" + currentValue);
-                car1.setSpeed(currentValue);
+                //car1.setSpeed(currentValue);
             }
 
         });
@@ -109,7 +109,7 @@ public class PrincipalComp extends JFrame{
 
                       //  MyVehicle.setColor(MyVehicle.id,color); // analyze and change
                         }
-                    VehicleAdder.addRandomVehicle();
+                    //VehicleAdder.addRandomVehicle();
 
             }
         }

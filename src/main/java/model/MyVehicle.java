@@ -1,23 +1,30 @@
 package model;
 
+import GUI.SumoTrafficControl;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.objects.SumoColor;
 import de.tudresden.sumo.objects.SumoPosition2D;
 import it.polito.appeal.traci.SumoTraciConnection;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class MyVehicle {
+    private static final Logger LOG = LogManager.getLogger(MyVehicle.class.getName());
     private String id;
     private SumoTraciConnection conn;
+    SumoColor color ;
 
-    public MyVehicle(String id, SumoTraciConnection conn){
+    public MyVehicle(String id, SumoTraciConnection conn, SumoColor color){
         this.id = id;
         this.conn = conn;
+        //newly added trying to save color values for each Vehicle Object(still doesn't work)
+         this.color =  new SumoColor(color.r, color.g, color.b, color.a);
     }
 
     public String getId() {
-       return this.id;
+        return this.id;
     }
-
 
     public double getX() {
         try{
@@ -65,11 +72,13 @@ public class MyVehicle {
     }
 
     public void setColor(String id, SumoColor color) {
+
         try {
-            conn.do_job_set(de.tudresden.sumo.cmd.Vehicle.setColor(this.id, new SumoColor(color.a, color.g, color.r, color.b)));
-            System.out.println("Color set to " + color.r + ", " + color.g + ", " + color.b + ", " + color.a);
+            conn.do_job_set(de.tudresden.sumo.cmd.Vehicle.setColor(this.id, color));//new SumoColor(color.a, color.g, color.r, color.b)
+            System.out.println("Color set to R " +color.r + ", G" + color.g + ", B" + color.b + ", A" + color.a);
         } catch (Exception e) {
-            System.out.println("Fehler color " + id + " " + e.getMessage());
+           // System.out.println("Fehler color " + id + " " + e.getMessage());
+            LOG.error("Fehler color..."+ id,e);
         }
     }
 }

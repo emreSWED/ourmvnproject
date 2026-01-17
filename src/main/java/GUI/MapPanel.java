@@ -28,7 +28,8 @@ public class MapPanel extends JPanel {
     private final Color COLOR_ROAD_BORDER = Color.WHITE;
     private final Color COLOR_ASPHALT = Color.BLACK;
     private final Color COLOR_DASH = Color.WHITE;
-    private final Color COLOR_CAR = new Color(0, 255, 255);
+    private  Color COLOR_CAR = new Color(0, 255, 255);
+
 
     private final double LANE_WIDTH = 3.5;
 
@@ -184,7 +185,7 @@ public class MapPanel extends JPanel {
 
     private void drawCars(Graphics2D g2d) {
 
-        g2d.setColor(COLOR_CAR);
+        g2d.setColor(SumoTrafficControl.getCarColor());
 
         double carLength = 4.5;
         double carWidth = 2.0;
@@ -218,7 +219,7 @@ public class MapPanel extends JPanel {
             g2d.draw(carShape);
 
             //Reset color and reset camera for next car
-            g2d.setColor(COLOR_CAR);
+            g2d.setColor(SumoTrafficControl.getCarColor());
             g2d.setTransform(original);
         }
     }

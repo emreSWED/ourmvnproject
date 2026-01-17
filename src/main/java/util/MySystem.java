@@ -1,7 +1,9 @@
 package util;
 
+import GUI.SumoTrafficControl;
 import de.tudresden.sumo.cmd.Trafficlight;
 import de.tudresden.sumo.cmd.Vehicle;
+import de.tudresden.sumo.objects.SumoColor;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import model.MyTrafficLight;
@@ -21,7 +23,8 @@ public class MySystem {
         List<String> vehicles = (List<String>) traciConnection.do_job_get(Vehicle.getIDList());
         List<MyVehicle> myVehicles = new ArrayList<>();
         for (String vehicleID : vehicles) {
-            MyVehicle v = new MyVehicle(vehicleID, this.traciConnection);
+            //newly added, due to chance in MyVehicle Constructor (SumoColor)
+            MyVehicle v = new MyVehicle(vehicleID, this.traciConnection, SumoTrafficControl.getCarSColor());
             myVehicles.add(v);
         }
         return myVehicles;
