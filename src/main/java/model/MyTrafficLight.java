@@ -4,9 +4,16 @@ import it.polito.appeal.traci.SumoTraciConnection;
 
 import de.tudresden.sumo.objects.SumoLinkList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import util.ConnectionManager;
+
 import java.util.List;
 
 public class MyTrafficLight {
+    private static final Logger LOG = LogManager.getLogger(ConnectionManager.class.getName());
+
+
     private String id;
     private SumoTraciConnection conn;
 
@@ -39,7 +46,9 @@ public class MyTrafficLight {
         try {
             conn.do_job_set(Trafficlight.setRedYellowGreenState(this.id, state));
         } catch (Exception e) {
-            System.out.println("Could not set phase");
+            //System.out.println("Could not set phase");
+            LOG.error("Failed to set Traffic Light {} to Phase {}",id,state,e);
+
         }
     }
 }

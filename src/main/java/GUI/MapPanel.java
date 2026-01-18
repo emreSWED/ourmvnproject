@@ -6,6 +6,9 @@ import loader.YCoordinateFlipper;
 import model.MyVehicle;
 import util.MySystem;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MapPanel extends JPanel {
+    private static final Logger LOG = LogManager.getLogger(MapPanel.class.getName());
 
     private List<MyVehicle> currentVehicles = new ArrayList<>(); //save list of Vehicles we want to draw
     private final Map<MyVehicle, Shape> carHitboxes = new HashMap<>();
@@ -76,7 +80,8 @@ public class MapPanel extends JPanel {
                         }
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    //ex.printStackTrace();
+                    LOG.error("Error processing mouse click in MapPanel ",ex);// if scaleFactor == 0
                 }
             }
         });

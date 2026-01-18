@@ -1,3 +1,4 @@
+import GUI.SumoTrafficControl;
 import de.tudresden.sumo.cmd.*;
 import de.tudresden.sumo.objects.SumoColor;
 
@@ -53,7 +54,8 @@ public class Main {
                 gui.setTrafficLights(trafficLightsList);
                 gui.setVisible(true);
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                LOG.error("Error initializing Graphic interface",e);
             }
         });
 
@@ -80,12 +82,18 @@ public class Main {
                 gui.refreshMap(mySystem.getVehicles());
             }
 
-            System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
+            //System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
+            //Number of Vehicles is being shown in the GUI, this keeps Terminal cleaner
+            System.out.println("step number " + step);
             System.out.println("List of cars in simulation: " + mySystem.getVehicles());
+
+            //newly added to show total number of vehicles in simulation in a Label
+            SumoTrafficControl.setInfoCountVehText(SumoTrafficControl.getStringVehiclesCount(mySystem.getVehicles().size()));
+
 
             List<MyVehicle> vehicles = mySystem.getVehicles();
             for (MyVehicle v : vehicles) {
-                if (step % 10 == 0) v.setColor(new SumoColor(255, 0, 0, 255));
+                if (step % 10 == 0) v.setColor(new SumoColor(255, 0, 0, 255)); //gui.getRed(), gui.getGreen(), gui.getBlue(), gui.getAlpha())
                 if (step % 10 == 3) v.setColor(new SumoColor(0, 255, 0, 255));
                 if (step % 10 == 7) v.setColor(new SumoColor(0, 9, 255, 255));
                 System.out.println(v.getX() + ", " + v.getY() + ", " + v.getSpeed() + ", " + v.getId() + ", " + v.getColor());
@@ -100,6 +108,7 @@ public class Main {
 
         //SOME TESTS
         conn.stopConnection();
-        System.out.println("Connection closed.");
+        //System.out.println("Connection closed."); added als Log in Method
+
     }
 }

@@ -29,8 +29,8 @@ public class MySystem {
         List<String> vehicles = (List<String>) traciConnection.do_job_get(Vehicle.getIDList());
         List<MyVehicle> myVehicles = new ArrayList<>();
         for (String vehicleID : vehicles) {
-            //newly added, due to chance in MyVehicle Constructor (SumoColor)
-            MyVehicle v = new MyVehicle(vehicleID, this.traciConnection, SumoTrafficControl.getCarSColor());
+
+            MyVehicle v = new MyVehicle(vehicleID, this.traciConnection);
             myVehicles.add(v);
         }
         return myVehicles;
