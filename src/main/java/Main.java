@@ -69,9 +69,9 @@ public class Main {
             }
         });
         /**
-         * The exporter used to save vehicle data into a CSV file.
-         */
-        TrafficDataExporter exporter = new TrafficDataExporter("simulation_results.csv");
+        * The exporter used to save vehicle data into a CSV file.
+        */
+        TrafficDataExporter exporter = new TrafficDataExporter();
         int step = 0;
 
         while (MySystem.running) {
@@ -92,7 +92,7 @@ public class Main {
             // Daten für GUI und Export holen
             List<MyVehicle> vehicles = mySystem.getVehicles();
 
-            // Deine neue Klasse nutzen:
+
             exporter.logCurrentStep(step, vehicles);
 
             if (gui != null) {
