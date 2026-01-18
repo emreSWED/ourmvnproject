@@ -1,4 +1,6 @@
 package GUI;
+import de.tudresden.sumo.objects.SumoColor;
+import loader.LaneTrafficLight;
 import loader.VehicleAdder;
 import model.MyTrafficLight;
 import model.MyVehicle;
@@ -20,6 +22,14 @@ public class SumoTrafficControl extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
 
+    static JLabel infoCountVeh = new JLabel();
+    static JSlider slider_Red = new JSlider();
+    static JSlider slider_Green = new JSlider();
+    static JSlider slider_Blue = new JSlider();
+    static JSlider slider_Alpha = new JSlider();
+
+
+
     private MapPanel mapPanel;
 
     private final Color COLOR_BG_MAIN   = new Color(52, 73, 94);
@@ -38,15 +48,18 @@ public class SumoTrafficControl extends JFrame {
     private MySystem mySystem = new MySystem(connectionManager.traciConnection);
     private List<MyTrafficLight> loadedTrafficLights = new ArrayList<>();
     private String currentTrafficLightID = mySystem.getTrafficLights().getFirst().getId();
-    MyTrafficLight trafficLights = new MyTrafficLight(currentTrafficLightID, ConnectionManager.traciConnection);
+    private LaneTrafficLight laneTrafficLight;
+    MyTrafficLight trafficLight = new MyTrafficLight(currentTrafficLightID, ConnectionManager.traciConnection);
 
-    public void setTrafficLights(List<MyTrafficLight> lights) {
+    public void setTrafficLight(List<MyTrafficLight> lights) {
         this.loadedTrafficLights = lights;
     }
 
     public SumoTrafficControl() throws Exception {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1300, 900);
+        setTitle("Sumo Trafic Simulation");
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //setBounds(150, 0, 1300, 900);
         contentPane = new JPanel();
         contentPane.setBackground(COLOR_BG_MAIN);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -58,12 +71,83 @@ public class SumoTrafficControl extends JFrame {
         lblNewLabel.setFont(FONT_TITLE);
         lblNewLabel.setForeground(COLOR_TEXT);
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        contentPane.add(lblNewLabel);
+        //contentPane.add(lblNewLabel);
 
         mapPanel = new MapPanel();
-        mapPanel.setBounds(320, 110, 950, 740);
+        mapPanel.setBounds(320, 20, 1200, 740);
         contentPane.add(mapPanel);
 
+        // --- RED SLIDER ---
+
+        JSlider slider_Red = new JSlider();
+        slider_Red.setBackground(COLOR_BG_MAIN);
+        slider_Red.setForeground(COLOR_TEXT);
+        slider_Red.setMinorTickSpacing(5);
+        slider_Red.setMaximum(255);
+        slider_Red.setBounds(57, 205, 190, 26);
+        // Listener hinzufügen
+        slider_Red.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                // Wert holen und ins Textfeld schreiben
+                textField_Red.setText(String.valueOf(slider_Red.getValue()));
+            }
+        });
+        contentPane.add(slider_Red);
+
+        // --- GREEN SLIDER ---
+
+        JSlider slider_Green = new JSlider();
+        slider_Green.setBackground(COLOR_BG_MAIN);
+        slider_Green.setForeground(COLOR_TEXT);
+        slider_Green.setMinorTickSpacing(5);
+        slider_Green.setMaximum(255);
+        slider_Green.setBounds(57, 230, 190, 26);
+        // Listener hinzufügen
+        slider_Green.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                textField_Green.setText(String.valueOf(slider_Green.getValue()));
+            }
+        });
+        contentPane.add(slider_Green);
+
+        // --- BLUE SLIDER ---
+
+        JSlider slider_Blue = new JSlider();
+        slider_Blue.setBackground(COLOR_BG_MAIN);
+        slider_Blue.setForeground(COLOR_TEXT);
+        slider_Blue.setMinorTickSpacing(5);
+        slider_Blue.setMaximum(255);
+        slider_Blue.setBounds(57, 257, 190, 26);
+        // Listener hinzufügen
+        slider_Blue.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                textField_Blue.setText(String.valueOf(slider_Blue.getValue()));
+            }
+        });
+        contentPane.add(slider_Blue);
+
+        // --- ALPHA SLIDER ---
+
+        JSlider slider_Alpha = new JSlider();
+        slider_Alpha.setBackground(COLOR_BG_MAIN);
+        slider_Alpha.setForeground(COLOR_TEXT);
+        slider_Alpha.setMinorTickSpacing(5);
+        slider_Alpha.setMaximum(255);
+        slider_Alpha.setBounds(57, 283, 190, 26);
+        // Listener hinzufügen
+        slider_Alpha.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                textField_Alpha.setText(String.valueOf(slider_Alpha.getValue()));
+            }
+        });
+        contentPane.add(slider_Alpha);
+
+        JLabel lblNewLabel_1 = new JLabel("Color Changer");
+        lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+        lblNewLabel_1.setFont(SUB_TITLE);
+        lblNewLabel_1.setForeground(COLOR_TEXT);
+        lblNewLabel_1.setBounds(10, 150, 290, 40);
+        contentPane.add(lblNewLabel_1);
 
         // start button
         JButton btnStart = new JButton("START");
@@ -206,7 +290,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("rrrrrrrrr");
+                trafficLight.setState("rrrrrrrrr");
             }
         });
         btnNewButton_1.setBounds(10, 492, 133, 50);
@@ -217,7 +301,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("GGGGGGGGG");
+                trafficLight.setState("GGGGGGGGG");
             }
         });
         btnNewButton_1_1.setBounds(153, 572, 133, 50);
@@ -228,7 +312,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("yyyyyyyyy");
+                trafficLight.setState("yyyyyyyyy");
             }
         });
         btnNewButton_1_1_1.setBounds(153, 492, 133, 50);
@@ -239,7 +323,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1_2.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("ggggggggg");
+                trafficLight.setState("ggggggggg");
             }
         });
         btnNewButton_1_1_2.setBounds(10, 572, 133, 50);
@@ -309,13 +393,61 @@ public class SumoTrafficControl extends JFrame {
     }
 
 
+        //newly Added Lable to Add information about total count of autos in simulation
+        infoCountVeh.setFont(new Font("Tahoma", Font.TRUETYPE_FONT, 14));
+        infoCountVeh.setHorizontalAlignment(SwingConstants.CENTER);
+        infoCountVeh.setBounds(10, 650, 133, 50);
+        contentPane.add(infoCountVeh);
+    }
+
+    /**
+     * Updates the map with the latest list of cars and traffic lights.
+     * It passes the new data to the map panel so it can redraw everything.
+     *
+     * @param vehicles The list of cars to show.
+     * @param lights   The list of traffic lights to show.
+     */
     public void refreshMap(List<model.MyVehicle> vehicles, List<model.MyTrafficLight> lights) {
         if (mapPanel != null) {
-
             mapPanel.updateMap(vehicles, lights);
         }
     }
 
+    public static int getRed(){ return slider_Red.getValue();}
+    public static int getGreen(){ return slider_Green.getValue();}
+    public static int getBlue(){ return slider_Blue.getValue();}
+    public static int getAlpha(){ return slider_Alpha.getValue();}
+
+    public  static Color getCarColor(){
+        return new Color(
+                getRed(),
+                getGreen(),
+                getBlue(),
+                getAlpha()
+        );
+    }
+
+    public static SumoColor getCarSColor(){
+        return new SumoColor(
+                getBlue(),
+                getGreen(),
+                getAlpha(),
+                getRed()
+        );
+    }
+
+
+    public static String getStringVehiclesCount(int valueOfMyVehicle){ return String.valueOf(valueOfMyVehicle);}
+    public static void setInfoCountVehText(String VehicleCountInSystem){infoCountVeh.setText("Total Vehicles: \n"+VehicleCountInSystem);}
+
+
+    /**
+     * Changes the look of a button.
+     * It sets the font, colors, and border to match the design.
+     * It also changes the mouse cursor to a hand when hovering.
+     *
+     * @param btn The button to style.
+     */
     private void styleButton(JButton btn) {
         btn.setFont(FONT_NORMAL);
         btn.setBackground(COLOR_ACCENT);

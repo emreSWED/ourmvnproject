@@ -29,7 +29,7 @@ public class SingleTrafficLight {
             this.ID = ID;
             this.myTrafficLight = myTrafficLight;
             this.index = index;
-            clusterState = new StringBuilder(myTrafficLight.getState().toString());
+            clusterState = new StringBuilder(myTrafficLight.getState());
 
             clusterStateLenght = clusterState.length();
 
@@ -53,7 +53,7 @@ public class SingleTrafficLight {
 
     public void setGreenNonPriority(){
         try {
-            clusterState = new StringBuilder(myTrafficLight.getState().toString());
+            clusterState = new StringBuilder(myTrafficLight.getState());
             clusterState.setCharAt(index, 'g');
             myTrafficLight.setState(clusterState.toString());
 

@@ -1,3 +1,4 @@
+import GUI.SumoTrafficControl;
 import de.tudresden.sumo.cmd.*;
 import de.tudresden.sumo.objects.SumoColor;
 
@@ -6,7 +7,6 @@ import model.MyLane;
 import model.MyTrafficLight;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +15,7 @@ import util.MySystem;
 
 
 import model.MyVehicle;
+import util.TrafficDataExporter;
 
 public class Main {
 
@@ -35,10 +36,13 @@ public class Main {
         MySystem mySystem = new MySystem(conn.traciConnection);
         LaneLoader currentLanes = new LaneLoader(conn);
 
-
-
         VehicleAdder vehicleAdder = new VehicleAdder();
         YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
+        new TrafficLightSplitter();
+        TrafficLightSplitter.conn = conn;
+        TrafficLightSplitter.loadTrafficLights(mySystem);
+        TrafficLightSplitter.splitTrafficLight();
+
 
         List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
         System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
@@ -50,16 +54,19 @@ public class Main {
         javax.swing.SwingUtilities.invokeAndWait(() -> {
             try {
                 gui = new GUI.SumoTrafficControl();
-                gui.setTrafficLights(trafficLightsList);
+                gui.setTrafficLight(trafficLightsList);
                 gui.setVisible(true);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Failed starting the GUI",e);
             }
         });
-
-
-
+        /**
+        * The exporter used to save vehicle data into a CSV file.
+        */
+        TrafficDataExporter exporter = new TrafficDataExporter();
         int step = 0;
+
+        MySystem.stopped = true;
 
         while (MySystem.running) {
 
@@ -77,6 +84,11 @@ public class Main {
             step++;
 
             List<MyTrafficLight> currentLights = mySystem.getTrafficLights();
+            // Daten für GUI und Export holen
+            List<MyVehicle> vehicles = mySystem.getVehicles();
+
+
+            exporter.logCurrentStep(step, vehicles);
 
             if (gui != null) {
                 gui.refreshMap(mySystem.getVehicles(), currentLights);
@@ -85,7 +97,11 @@ public class Main {
             System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
             System.out.println("List of cars in simulation: " + mySystem.getVehicles());
 
-            List<MyVehicle> vehicles = mySystem.getVehicles();
+            //newly added to show total number of vehicles in simulation in a Label
+            SumoTrafficControl.setInfoCountVehText(SumoTrafficControl.getStringVehiclesCount(mySystem.getVehicles().size()));
+
+
+
             for (MyVehicle v : vehicles) {
                 System.out.println(v.getX() + ", " + v.getY() + ", " + v.getSpeed() + ", " + v.getId() + ", " + v.getColor());
             }
@@ -99,6 +115,7 @@ public class Main {
 
         //SOME TESTS
         conn.stopConnection();
-        System.out.println("Connection closed.");
+        //System.out.println("Connection closed."); added als Log in Method
+
     }
 }

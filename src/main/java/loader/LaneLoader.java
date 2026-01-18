@@ -27,30 +27,38 @@ public class LaneLoader {
      * Lane Positions for later rendering
      */
     public static List<SumoGeometry> lanePositions; //List of a List of the singular "lines" the lanes is drawn out of.
-
+    /**
+     * List of our Lane wrapper
+     */
     public static List<MyLane> myLanes;
     // public static ConnectionManager conn; instead of having conn in the Constructor, it could also be declared static here
 
     public static Map<String, MyLane> laneMap = new HashMap<>();
 
-    //when a loader.LaneLoader object is created, all the lanes are loaded into the Lists.
+    /**
+     *  when a loader.LaneLoader object is created, all the lanes are loaded into the Lists.
+     *  creates a list of all the lanes in laneIDs
+     *  loops through laneIDs List and grabs those coordinate List of the lines
+     *  adds the laneID to our own MyLane class, constructor handles loading into Path2D for each lane to be rendered in Graphics2D engine
+     */
+
     public LaneLoader(ConnectionManager conn) throws Exception {
         laneCount = (int) conn.dojobget(Lane.getIDCount()); //gets the number of lanes into laneCount
         laneIDs = (List<String>) conn.dojobget(Lane.getIDList());
 
-        lanePositions       = new ArrayList<>();//creates a list of all the lanes in laneIDs
+        lanePositions       = new ArrayList<>();
         myLanes = new ArrayList<>();
 
-        for(int i = 0; i < laneCount; i++){ //loops through laneIDs List and grabs those coordinate List of the lines
+        for(int i = 0; i < laneCount; i++){
             lanePositions.add(i, (SumoGeometry) conn.dojobget(Lane.getShape(laneIDs.get(i))));
         }
-        //static connection to conn for all lanes
+
 
         for(int i = 0; i < laneIDs.size(); i++){
             myLanes.add(new MyLane(laneIDs.get(i), lanePositions.get(i).coords.size() ));
             MyLane newLane = new MyLane(laneIDs.get(i), lanePositions.get(i).coords.size());
             myLanes.add(newLane);
-            //adds the laneID to our own MyLane class, constructor handles loading into Path2D for each lane to be rendered in Graphics2D engine
+
             laneMap.put(laneIDs.get(i), newLane);
         }
 

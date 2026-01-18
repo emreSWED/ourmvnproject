@@ -7,6 +7,9 @@ import model.MyVehicle;
 import util.MySystem;
 import model.MyTrafficLight;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -17,7 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class draws the map for the simulation.
+ * It shows the roads, cars, and traffic lights.
+ * It also handles mouse clicks to select cars.
+ */
 public class MapPanel extends JPanel {
+    private static final Logger LOG = LogManager.getLogger(MapPanel.class.getName());
 
     private List<MyVehicle> currentVehicles = new ArrayList<>(); //save list of Vehicles we want to draw
     private final Map<MyVehicle, Shape> carHitboxes = new HashMap<>();
@@ -41,6 +50,11 @@ public class MapPanel extends JPanel {
 
     private final double LANE_WIDTH = 3.5;
 
+    /**
+     * Creates the MapPanel.
+     * It sets the background color and checks for mouse clicks.
+     * If you click a car, it gets selected.
+     */
     //constructor
     public MapPanel() {
         this.setBackground(COLOR_BACKGROUND);   //color of meadow
@@ -85,7 +99,8 @@ public class MapPanel extends JPanel {
                         System.out.println("Nothing happened");
 
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    //ex.printStackTrace();
+                    LOG.error("Error processing mouse click in MapPanel ",ex);// if scaleFactor == 0
                 }
             }
         });
@@ -106,6 +121,14 @@ public class MapPanel extends JPanel {
         });
     }
 
+    /**
+     * Gets new data from the main program.
+     * It saves the list of cars and lights, then redraws the picture.
+     *
+     * @param vehicles The list of cars to show.
+     * @param lights   The list of traffic lights to show.
+     */
+
     //interface to the outside, Main calls up this method, when new cars
     public void updateMap(List<MyVehicle> vehicles, List<MyTrafficLight> lights) {
         this.currentVehicles = vehicles;
@@ -113,6 +136,12 @@ public class MapPanel extends JPanel {
         repaint();
     }
 
+    /**
+     * This is the main drawing method.
+     * It draws the background, roads, markings, lights, and cars.
+     *
+     * @param g The graphics object used for drawing.
+     */
 
     //where the drawing happens
     @Override
@@ -149,6 +178,10 @@ public class MapPanel extends JPanel {
         g2d.setTransform(old);
     }
 
+    /**
+     * Calculates the zoom and position of the map.
+     * It makes sure the whole map fits inside the window.
+     */
 
     private void calculateZoom() {
         //initialize min/max with extrem values
@@ -195,6 +228,15 @@ public class MapPanel extends JPanel {
         this.boundsCalculated = true;
     }
 
+    /**
+     * Draws the main shape of the roads.
+     * It can draw the white border or the black asphalt.
+     *
+     * @param g2d   The 2D graphics object.
+     * @param c     The color of the road part.
+     * @param width The width of the line to draw.
+     */
+
     //draw road
     private void drawRoadLayer(Graphics2D g2d, Color c, double width) {
         g2d.setColor(c);
@@ -204,6 +246,13 @@ public class MapPanel extends JPanel {
             if (lane.lanePath != null) g2d.draw(lane.lanePath);
         }
     }
+
+    /**
+     * Draws the white markings on the road.
+     * It draws the dashed line in the middle and stop lines at intersections.
+     *
+     * @param g2d The 2D graphics object.
+     */
 
     private void drawRoadMarkings(Graphics2D g2d) {
         // --- KONFIGURATION ---
@@ -311,7 +360,12 @@ public class MapPanel extends JPanel {
         }
     }
 
-
+    /**
+     * Draws all the cars on the map.
+     * It sets the right position, rotation, and color for each car.
+     *
+     * @param g2d The 2D graphics object.
+     */
 
     private void drawCars(Graphics2D g2d) {
         carHitboxes.clear();
@@ -322,7 +376,12 @@ public class MapPanel extends JPanel {
         }
     }
 
-
+    /**
+     * Draws the traffic lights.
+     * It puts them next to the road and shows red, yellow, or green lights.
+     *
+     * @param g2d The 2D graphics object.
+     */
     private void drawTrafficLights(Graphics2D g2d) {
         if (currentTrafficLights == null) return;
 

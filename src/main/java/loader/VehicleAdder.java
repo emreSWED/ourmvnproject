@@ -1,4 +1,5 @@
 package loader;
+import GUI.SumoTrafficControl;
 import de.tudresden.sumo.cmd.Route;
 import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
@@ -10,6 +11,7 @@ import util.MySystem;
 import java.awt.*;
 
 import static loader.RouteGenerator2.routeidcounter;
+import java.awt.*;
 
 
 public class VehicleAdder {
@@ -17,6 +19,11 @@ public class VehicleAdder {
     public static ConnectionManager conn;
     public VehicleAdder() {
     }
+
+    /**
+     * adds a random vehicle into the simulation. Generates the route with the RouteGenerator2 class, which instanciates an object inside this method
+     * @throws Exception
+     */
     public static void addRandomVehicle() throws Exception {
         RouteGenerator2 routeGenerator = new RouteGenerator2();
         conn.dojobset(Vehicle.add("ourVehicle"+vehCounter,"DEFAULT_VEHTYPE", "route"+(routeidcounter-1), (int)conn.dojobget(Simulation.getCurrentTime())+1, 0.0,15.0, (byte) 0));
