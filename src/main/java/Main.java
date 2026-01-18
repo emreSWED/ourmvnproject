@@ -25,6 +25,7 @@ public class Main {
         LOG.info("initializing connection to SUMO");
 
 
+
         ConnectionManager conn = new ConnectionManager("SumoConfig/myconfig.sumocfg");
         conn.startConnection();
         RouteGenerator.conn = conn;
