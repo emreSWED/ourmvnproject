@@ -1,6 +1,7 @@
 package GUI;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.objects.SumoColor;
+import loader.SingleTrafficLight;
 import loader.VehicleAdder;
 import model.MyTrafficLight;
 import util.ConnectionManager;
@@ -53,6 +54,7 @@ public class SumoTrafficControl extends JFrame {
     private MySystem mySystem = new MySystem(connectionManager.traciConnection);
     private List<MyTrafficLight> loadedTrafficLights = new ArrayList<>();
     private String currentTrafficLightID = mySystem.getTrafficLights().getFirst().getId();
+    private SingleTrafficLight singleTrafficLight;
     MyTrafficLight trafficLights = new MyTrafficLight(currentTrafficLightID, ConnectionManager.traciConnection);
 
     public void setTrafficLights(List<MyTrafficLight> lights) {
