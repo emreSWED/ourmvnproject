@@ -5,10 +5,14 @@ import de.tudresden.sumo.objects.*;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.MyLane;
 import util.ConnectionManager;
+
+
 
 public class LaneLoader {
     /**
@@ -25,7 +29,9 @@ public class LaneLoader {
     public static List<SumoGeometry> lanePositions; //List of a List of the singular "lines" the lanes is drawn out of.
 
     public static List<MyLane> myLanes;
-   // public static ConnectionManager conn; instead of having conn in the Constructor, it could also be declared static here
+    // public static ConnectionManager conn; instead of having conn in the Constructor, it could also be declared static here
+
+    public static Map<String, MyLane> laneMap = new HashMap<>();
 
     //when a loader.LaneLoader object is created, all the lanes are loaded into the Lists.
     public LaneLoader(ConnectionManager conn) throws Exception {
@@ -42,7 +48,10 @@ public class LaneLoader {
 
         for(int i = 0; i < laneIDs.size(); i++){
             myLanes.add(new MyLane(laneIDs.get(i), lanePositions.get(i).coords.size() ));
+            MyLane newLane = new MyLane(laneIDs.get(i), lanePositions.get(i).coords.size());
+            myLanes.add(newLane);
             //adds the laneID to our own MyLane class, constructor handles loading into Path2D for each lane to be rendered in Graphics2D engine
+            laneMap.put(laneIDs.get(i), newLane);
         }
 
     }
@@ -50,5 +59,9 @@ public class LaneLoader {
 
     public static void printAllLaneIDs(){
         System.out.println(laneIDs);
+    }
+
+    public static MyLane getLaneById(String id) {
+        return laneMap.get(id);
     }
 }

@@ -90,14 +90,10 @@ public class Main {
             conn.step();
             step++;
 
-            // Daten für GUI und Export holen
-            List<MyVehicle> vehicles = mySystem.getVehicles();
-
-            // Deine neue Klasse nutzen:
-            exporter.logCurrentStep(step, vehicles);
+            List<MyTrafficLight> currentLights = mySystem.getTrafficLights();
 
             if (gui != null) {
-                gui.refreshMap(mySystem.getVehicles());
+                gui.refreshMap(mySystem.getVehicles(), currentLights);
             }
 
 
@@ -113,7 +109,7 @@ public class Main {
             }
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 return;
             }
