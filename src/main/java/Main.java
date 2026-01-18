@@ -7,7 +7,6 @@ import model.MyLane;
 import model.MyTrafficLight;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +15,7 @@ import util.MySystem;
 
 
 import model.MyVehicle;
+import util.TrafficDataExporter;
 
 public class Main {
 
@@ -24,7 +24,6 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         LOG.info("initializing connection to SUMO");
-
 
 
         ConnectionManager conn = new ConnectionManager("SumoConfig/myconfig.sumocfg");
@@ -37,8 +36,6 @@ public class Main {
         MySystem mySystem = new MySystem(conn.traciConnection);
         LaneLoader currentLanes = new LaneLoader(conn);
 
-        RouteGenerator routeGenerator = new RouteGenerator();
-
         VehicleAdder vehicleAdder = new VehicleAdder();
         YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
         new TrafficLightSplitter();
@@ -46,10 +43,6 @@ public class Main {
         TrafficLightSplitter.loadTrafficLights(mySystem);
         TrafficLightSplitter.splitTrafficLight();
 
-
-
-        VehicleAdder vehicleAdder = new VehicleAdder();
-        YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
 
         List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
         System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
@@ -61,15 +54,15 @@ public class Main {
         javax.swing.SwingUtilities.invokeAndWait(() -> {
             try {
                 gui = new GUI.SumoTrafficControl();
-                gui.setTrafficLights(trafficLightsList);
+                gui.setTrafficLight(trafficLightsList);
                 gui.setVisible(true);
             } catch (Exception e) {
                 LOG.error("Failed starting the GUI",e);
             }
         });
         /**
-         * The exporter used to save vehicle data into a CSV file.
-         */
+        * The exporter used to save vehicle data into a CSV file.
+        */
         TrafficDataExporter exporter = new TrafficDataExporter();
         int step = 0;
 
@@ -90,6 +83,7 @@ public class Main {
             conn.step();
             step++;
 
+            List<MyTrafficLight> currentLights = mySystem.getTrafficLights();
             // Daten für GUI und Export holen
             List<MyVehicle> vehicles = mySystem.getVehicles();
 
@@ -107,7 +101,7 @@ public class Main {
             SumoTrafficControl.setInfoCountVehText(SumoTrafficControl.getStringVehiclesCount(mySystem.getVehicles().size()));
 
 
-            List<MyVehicle> vehicles = mySystem.getVehicles();
+
             for (MyVehicle v : vehicles) {
                 if (step % 10 == 0) v.setColor(new SumoColor(255, 0, 0, 255));
                 if (step % 10 == 3) v.setColor(new SumoColor(0, 255, 0, 255));
