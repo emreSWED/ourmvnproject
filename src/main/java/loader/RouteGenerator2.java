@@ -14,7 +14,11 @@ public class RouteGenerator2 {
     public SumoStage routeStage;
     public SumoStringList edgeList;
 
-
+    /**
+     * generates random routes by looking through all edges until a valid connection is found.
+     *
+     * @throws Exception
+     */
     public RouteGenerator2() throws Exception{
         routeStage = new SumoStage();
         edgeList = (SumoStringList) conn.dojobget(Edge.getIDList());

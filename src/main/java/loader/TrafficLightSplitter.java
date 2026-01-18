@@ -92,6 +92,10 @@ public class TrafficLightSplitter {
         }
     }
 
+    /**
+     * combines the split traffic lights back into each lane
+     * can now be used to control each lane individually.
+     */
     public static void createLaneTrafficLights() {
         List<SingleTrafficLight> singleTrafficLightList = new ArrayList<>();
         for(int i= 0; i < singleTLindex; i++) {
