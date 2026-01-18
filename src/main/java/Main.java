@@ -60,9 +60,10 @@ public class Main {
                 LOG.error("Failed starting the GUI",e);
             }
         });
-
-
-
+        /**
+        * The exporter used to save vehicle data into a CSV file.
+        */
+        TrafficDataExporter exporter = new TrafficDataExporter();
         int step = 0;
 
         MySystem.stopped = true;
@@ -82,7 +83,11 @@ public class Main {
             conn.step();
             step++;
 
-            List<MyTrafficLight> currentLights = mySystem.getTrafficLights();
+            // Daten für GUI und Export holen
+            List<MyVehicle> vehicles = mySystem.getVehicles();
+
+
+            exporter.logCurrentStep(step, vehicles);
 
             if (gui != null) {
                 gui.refreshMap(mySystem.getVehicles(), currentLights);
