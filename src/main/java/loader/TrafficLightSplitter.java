@@ -5,6 +5,7 @@ import de.tudresden.sumo.objects.SumoLink;
 import de.tudresden.sumo.objects.SumoLinkList;
 import de.tudresden.sumo.objects.SumoStringList;
 import model.MyTrafficLight;
+import util.ConnectionManager;
 import util.MySystem;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +18,7 @@ import java.util.List;
 
 
 public class TrafficLightSplitter {
+    public static ConnectionManager conn;
     public static final Logger LOG = LogManager.getLogger(TrafficLightSplitter.class.getName().toString());
     /**
      * A List of our MyTrafficLight, which is our Wrapper Class for SUMOs Traffic Light Clusters
@@ -60,6 +62,10 @@ public class TrafficLightSplitter {
                         id.append(singleTLindex);
 
                         SingleTrafficLight singleTrafficLight = new SingleTrafficLight(trafficLight, singleTLindex, id.toString());
+                        singleTrafficLight.fromLane = link.from.toString();
+                        singleTrafficLight.toLane = link.to.toString();
+                        singleTrafficLight.throughLane = link.over.toString();
+                        singleTrafficLight.xpos =
                         singleTrafficLights.add(singleTrafficLight);
                         singleTLindex++;
                     }
@@ -68,6 +74,10 @@ public class TrafficLightSplitter {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public static List<SingleTrafficLight> getSingleTrafficLightList() {
+        return singleTrafficLights;
     }
 }
 

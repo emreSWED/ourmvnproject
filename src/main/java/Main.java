@@ -40,7 +40,7 @@ public class Main {
         VehicleAdder vehicleAdder = new VehicleAdder();
         YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
         new TrafficLightSplitter();
-
+        TrafficLightSplitter.conn = conn;
         TrafficLightSplitter.loadTrafficLights(mySystem);
         TrafficLightSplitter.splitTrafficLight();
 
