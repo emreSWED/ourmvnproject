@@ -212,7 +212,7 @@ public class SumoTrafficControl extends JFrame {
 
         JButton btnStressTest = new JButton("Stress Test");
         styleButton(btnStressTest);
-        btnStressTest.setBounds(10, 800, 276, 50);
+        btnStressTest.setBounds(10, 700, 276, 50);
         btnStressTest.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -393,8 +393,10 @@ public class SumoTrafficControl extends JFrame {
     }
 
 
+
         //newly Added Lable to Add information about total count of autos in simulation
-        infoCountVeh.setFont(new Font("Tahoma", Font.TRUETYPE_FONT, 14));
+        infoCountVeh.setForeground(COLOR_TEXT);
+        infoCountVeh.setFont(new Font("Tahoma", Font.BOLD, 14));
         infoCountVeh.setHorizontalAlignment(SwingConstants.CENTER);
         infoCountVeh.setBounds(10, 650, 133, 50);
         contentPane.add(infoCountVeh);
