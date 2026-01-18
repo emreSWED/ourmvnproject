@@ -1,3 +1,4 @@
+import GUI.SumoTrafficControl;
 import de.tudresden.sumo.cmd.*;
 import de.tudresden.sumo.objects.SumoColor;
 
@@ -35,6 +36,15 @@ public class Main {
         MySystem mySystem = new MySystem(conn.traciConnection);
         LaneLoader currentLanes = new LaneLoader(conn);
 
+        RouteGenerator routeGenerator = new RouteGenerator();
+
+        VehicleAdder vehicleAdder = new VehicleAdder();
+        YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
+        new TrafficLightSplitter();
+        TrafficLightSplitter.conn = conn;
+        TrafficLightSplitter.loadTrafficLights(mySystem);
+        TrafficLightSplitter.splitTrafficLight();
+
 
 
         VehicleAdder vehicleAdder = new VehicleAdder();
@@ -53,13 +63,15 @@ public class Main {
                 gui.setTrafficLights(trafficLightsList);
                 gui.setVisible(true);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Failed starting the GUI",e);
             }
         });
 
 
 
         int step = 0;
+
+        MySystem.stopped = true;
 
         while (MySystem.running) {
 
@@ -85,6 +97,10 @@ public class Main {
             System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
             System.out.println("List of cars in simulation: " + mySystem.getVehicles());
 
+            //newly added to show total number of vehicles in simulation in a Label
+            SumoTrafficControl.setInfoCountVehText(SumoTrafficControl.getStringVehiclesCount(mySystem.getVehicles().size()));
+
+
             List<MyVehicle> vehicles = mySystem.getVehicles();
             for (MyVehicle v : vehicles) {
                 if (step % 10 == 0) v.setColor(new SumoColor(255, 0, 0, 255));
@@ -94,7 +110,7 @@ public class Main {
             }
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 return;
             }
@@ -102,6 +118,7 @@ public class Main {
 
         //SOME TESTS
         conn.stopConnection();
-        System.out.println("Connection closed.");
+        //System.out.println("Connection closed."); added als Log in Method
+
     }
 }

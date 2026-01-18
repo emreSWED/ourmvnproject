@@ -10,8 +10,13 @@ import java.util.List;
 
 import model.MyVehicle;
 import model.MyTrafficLight;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ConnectionManager {
+    private static final Logger LOG = LogManager.getLogger(ConnectionManager.class.getName());
+
+
     private String configFile;
     public static SumoTraciConnection traciConnection;
 
@@ -30,11 +35,13 @@ public class ConnectionManager {
     }
 
     public void startConnection() throws IOException {
+        LOG.info("Starting SUMO TraCI connection using config {}",configFile);
         traciConnection.addOption("start","true");
         traciConnection.runServer();
     }
 
     public void stopConnection() {
+        LOG.info("Connection closed.");
         traciConnection.close();
     }
 

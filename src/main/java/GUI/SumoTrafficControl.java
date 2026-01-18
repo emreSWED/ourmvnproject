@@ -1,4 +1,6 @@
 package GUI;
+import de.tudresden.sumo.cmd.Vehicle;
+import de.tudresden.sumo.objects.SumoColor;
 import loader.VehicleAdder;
 import model.MyTrafficLight;
 import util.ConnectionManager;
@@ -24,6 +26,14 @@ public class SumoTrafficControl extends JFrame {
     private JTextField textField_Green;
     private JTextField textField_Blue;
     private JTextField textField_Alpha;
+
+    static JLabel infoCountVeh = new JLabel();
+    static JSlider slider_Red = new JSlider();
+    static JSlider slider_Green = new JSlider();
+    static JSlider slider_Blue = new JSlider();
+    static JSlider slider_Alpha = new JSlider();
+
+
 
     private MapPanel mapPanel;
 
@@ -51,7 +61,9 @@ public class SumoTrafficControl extends JFrame {
 
     public SumoTrafficControl() throws Exception {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1300, 900);
+        setTitle("Sumo Trafic Simulation");
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //setBounds(150, 0, 1300, 900);
         contentPane = new JPanel();
         contentPane.setBackground(COLOR_BG_MAIN);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -63,13 +75,14 @@ public class SumoTrafficControl extends JFrame {
         lblNewLabel.setFont(FONT_TITLE);
         lblNewLabel.setForeground(COLOR_TEXT);
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        contentPane.add(lblNewLabel);
+        //contentPane.add(lblNewLabel);
 
         mapPanel = new MapPanel();
-        mapPanel.setBounds(320, 110, 950, 740);
+        mapPanel.setBounds(320, 20, 1200, 740);
         contentPane.add(mapPanel);
 
         // --- RED SLIDER ---
+
         JSlider slider_Red = new JSlider();
         slider_Red.setBackground(COLOR_BG_MAIN);
         slider_Red.setForeground(COLOR_TEXT);
@@ -86,6 +99,7 @@ public class SumoTrafficControl extends JFrame {
         contentPane.add(slider_Red);
 
         // --- GREEN SLIDER ---
+
         JSlider slider_Green = new JSlider();
         slider_Green.setBackground(COLOR_BG_MAIN);
         slider_Green.setForeground(COLOR_TEXT);
@@ -101,6 +115,7 @@ public class SumoTrafficControl extends JFrame {
         contentPane.add(slider_Green);
 
         // --- BLUE SLIDER ---
+
         JSlider slider_Blue = new JSlider();
         slider_Blue.setBackground(COLOR_BG_MAIN);
         slider_Blue.setForeground(COLOR_TEXT);
@@ -116,6 +131,7 @@ public class SumoTrafficControl extends JFrame {
         contentPane.add(slider_Blue);
 
         // --- ALPHA SLIDER ---
+
         JSlider slider_Alpha = new JSlider();
         slider_Alpha.setBackground(COLOR_BG_MAIN);
         slider_Alpha.setForeground(COLOR_TEXT);
@@ -322,6 +338,13 @@ public class SumoTrafficControl extends JFrame {
         textField_Alpha.setText(String.valueOf(slider_Alpha.getValue())); // <--- NEU
         contentPane.add(textField_Alpha);
 
+        //newly Added Lable to Add information about total count of autos in simulation
+        infoCountVeh.setFont(new Font("Tahoma", Font.TRUETYPE_FONT, 14));
+        infoCountVeh.setHorizontalAlignment(SwingConstants.CENTER);
+        infoCountVeh.setBounds(10, 650, 133, 50);
+        contentPane.add(infoCountVeh);
+
+
     }
 
     public void refreshMap(List<model.MyVehicle> vehicles, List<model.MyTrafficLight> lights) {
@@ -330,6 +353,35 @@ public class SumoTrafficControl extends JFrame {
             mapPanel.updateMap(vehicles, lights);
         }
     }
+    public static int getRed(){ return slider_Red.getValue();}
+    public static int getGreen(){ return slider_Green.getValue();}
+    public static int getBlue(){ return slider_Blue.getValue();}
+    public static int getAlpha(){ return slider_Alpha.getValue();}
+
+    public  static Color getCarColor(){
+        return new Color(
+                getRed(),
+                getGreen(),
+                getBlue(),
+                getAlpha()
+        );
+    }
+
+    public static SumoColor getCarSColor(){
+        return new SumoColor(
+                getBlue(),
+                getGreen(),
+                getAlpha(),
+                getRed()
+
+
+        );
+    }
+
+
+    public static String getStringVehiclesCount(int valueOfMyVehicle){ return String.valueOf(valueOfMyVehicle);}
+    public static void setInfoCountVehText(String VehicleCountInSystem){infoCountVeh.setText("Total Vehicles: \n"+VehicleCountInSystem);}
+
 
     // --- HILFSMETHODE FÜR DAS DESIGN ---
     private void styleButton(JButton btn) {

@@ -5,9 +5,16 @@ import it.polito.appeal.traci.SumoTraciConnection;
 
 import de.tudresden.sumo.objects.SumoLinkList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import util.ConnectionManager;
+
 import java.util.List;
 
 public class MyTrafficLight {
+    private static final Logger LOG = LogManager.getLogger(ConnectionManager.class.getName());
+
+
     private String id;
     private SumoTraciConnection conn;
 
@@ -28,10 +35,10 @@ public class MyTrafficLight {
         return (SumoStringList) this.conn.do_job_get(Trafficlight.getControlledLanes(this.id));
    }
 
-
     public SumoLinkList getControlledLinks() throws Exception {
         return (SumoLinkList) this.conn.do_job_get(Trafficlight.getControlledLinks(this.id));
     }
+
 
     public String getState() throws Exception {
         return (String) this.conn.do_job_get(Trafficlight.getRedYellowGreenState(this.id));
