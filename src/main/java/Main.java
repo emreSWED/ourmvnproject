@@ -76,8 +76,10 @@ public class Main {
             conn.step();
             step++;
 
+            List<MyTrafficLight> currentLights = mySystem.getTrafficLights();
+
             if (gui != null) {
-                gui.refreshMap(mySystem.getVehicles());
+                gui.refreshMap(mySystem.getVehicles(), currentLights);
             }
 
             System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
@@ -92,7 +94,7 @@ public class Main {
             }
 
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 return;
             }
