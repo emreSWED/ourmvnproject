@@ -14,6 +14,10 @@ public class LaneTrafficLight {
     public Shape shape;
     public char state;
 
+    /**
+     * This combines the single traffic lights into one LaneTrafficLight. This is done by TrafficLightSplitter Class.
+     * @param singleTrafficLights given by the TrafficLightSplitter Class
+     */
     public LaneTrafficLight(List<SingleTrafficLight> singleTrafficLights) {
         this.singleTrafficLights.addAll(singleTrafficLights);
         this.id = idnumber++;

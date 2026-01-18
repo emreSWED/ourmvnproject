@@ -17,6 +17,10 @@ public class VehicleAdder {
     public VehicleAdder() {
     }
 
+    /**
+     * adds a random vehicle into the simulation. Generates the route with the RouteGenerator2 class, which instanciates an object inside this method
+     * @throws Exception
+     */
     public static void addRandomVehicle() throws Exception {
         //int randomRouteVariable = (int)(Math.random()*5);
         RouteGenerator2 routeGenerator = new RouteGenerator2();
