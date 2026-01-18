@@ -344,16 +344,21 @@ public class SumoTrafficControl extends JFrame {
         infoCountVeh.setHorizontalAlignment(SwingConstants.CENTER);
         infoCountVeh.setBounds(10, 650, 133, 50);
         contentPane.add(infoCountVeh);
-
-
     }
 
+    /**
+     * Updates the map with the latest list of cars and traffic lights.
+     * It passes the new data to the map panel so it can redraw everything.
+     *
+     * @param vehicles The list of cars to show.
+     * @param lights   The list of traffic lights to show.
+     */
     public void refreshMap(List<model.MyVehicle> vehicles, List<model.MyTrafficLight> lights) {
         if (mapPanel != null) {
-
             mapPanel.updateMap(vehicles, lights);
         }
     }
+
     public static int getRed(){ return slider_Red.getValue();}
     public static int getGreen(){ return slider_Green.getValue();}
     public static int getBlue(){ return slider_Blue.getValue();}
@@ -374,8 +379,6 @@ public class SumoTrafficControl extends JFrame {
                 getGreen(),
                 getAlpha(),
                 getRed()
-
-
         );
     }
 
@@ -384,13 +387,19 @@ public class SumoTrafficControl extends JFrame {
     public static void setInfoCountVehText(String VehicleCountInSystem){infoCountVeh.setText("Total Vehicles: \n"+VehicleCountInSystem);}
 
 
-    // --- HILFSMETHODE FÜR DAS DESIGN ---
+    /**
+     * Changes the look of a button.
+     * It sets the font, colors, and border to match the design.
+     * It also changes the mouse cursor to a hand when hovering.
+     *
+     * @param btn The button to style.
+     */
     private void styleButton(JButton btn) {
         btn.setFont(FONT_NORMAL);
-        btn.setBackground(COLOR_ACCENT);    // Türkis
-        btn.setForeground(COLOR_TEXT);      // Weiße Schrift
-        btn.setFocusPainted(false);         // Entfernt den Klick-Rahmen
-        btn.setBorder(BorderFactory.createLineBorder(COLOR_DARK_ACC, 1)); // Dünner Rahmen
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Hand-Mauszeiger
+        btn.setBackground(COLOR_ACCENT);
+        btn.setForeground(COLOR_TEXT);
+        btn.setFocusPainted(false);
+        btn.setBorder(BorderFactory.createLineBorder(COLOR_DARK_ACC, 1));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 }

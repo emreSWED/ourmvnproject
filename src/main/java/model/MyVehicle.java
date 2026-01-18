@@ -42,9 +42,9 @@ public class MyVehicle {
             return -1.0;
         }
     }
+
     public double getAngle() {
         try {
-
             return (double) conn.do_job_get(Vehicle.getAngle(this.id));
         } catch (Exception e) {
             return 0;
