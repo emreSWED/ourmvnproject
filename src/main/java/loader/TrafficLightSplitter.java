@@ -65,7 +65,7 @@ public class TrafficLightSplitter {
                         singleTrafficLight.fromLane = link.from.toString();
                         singleTrafficLight.toLane = link.to.toString();
                         singleTrafficLight.throughLane = link.over.toString();
-                        singleTrafficLight.xpos =
+                        //singleTrafficLight.xpos =
                         singleTrafficLights.add(singleTrafficLight);
                         singleTLindex++;
                     }
