@@ -11,9 +11,19 @@ import model.MyLane;
 import util.ConnectionManager;
 
 public class LaneLoader {
-    public static int laneCount; //keeps track of number of lanes
+    /**
+     * keeps track of number of lanes
+     */
+    public static int laneCount;//keeps track of number of lanes
+    /**
+     * name of all laneIDs in the simulation as a list of strings
+     */
     public static List<String> laneIDs; //list of all the lanes in the simulation
+    /**
+     * Lane Positions for later rendering
+     */
     public static List<SumoGeometry> lanePositions; //List of a List of the singular "lines" the lanes is drawn out of.
+
     public static List<MyLane> myLanes;
    // public static ConnectionManager conn; instead of having conn in the Constructor, it could also be declared static here
 

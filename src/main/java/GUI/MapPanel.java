@@ -210,6 +210,8 @@ public class MapPanel extends JPanel {
         }
     }
 
+
+
     private void drawCars(Graphics2D g2d) {
 
         carHitboxes.clear();

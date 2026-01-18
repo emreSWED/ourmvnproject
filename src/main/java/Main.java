@@ -30,13 +30,14 @@ public class Main {
         conn.startConnection();
 
 //ALL LOADING FOR CLASSES, CONSTRUCTORS ETC. WHICH NEEDS TO HAPPEN ONCE HAPPPENS HERE
-        RouteGenerator.conn = conn;
+        RouteGenerator2.conn = conn;
         MyLane.conn = conn;
         VehicleAdder.conn = conn;
         SimulationWindowBounds simulationWindowBounds = new SimulationWindowBounds(conn);
         MySystem mySystem = new MySystem(conn.traciConnection);
         LaneLoader currentLanes = new LaneLoader(conn);
-        RouteGenerator routeGenerator = new RouteGenerator();
+        RouteGenerator2.conn = conn;
+        //RouteGenerator2 routeGenerator = new RouteGenerator2();
         VehicleAdder vehicleAdder = new VehicleAdder();
         YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
         new TrafficLightSplitter();
