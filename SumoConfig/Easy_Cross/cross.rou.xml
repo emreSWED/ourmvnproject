@@ -1,0 +1,5 @@
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+
+    <vType id="normal_car" accel="2.0" decel="4.5" length="5" maxSpeed="50" guiShape="passenger" color="1,1,0"/>
+
+    <route id="route_N_S" edges="4i 3o" /> <route id="route_S_N" edges="3i 4o" /> <route id="route_E_W" edges="2i 1o" /> <route id="route_W_E" edges="1i 2o" /> <flow id="traffic_N_S" begin="0" end="1000" number="50" route="route_N_S" type="normal_car" color="1,0,0" /> <flow id="traffic_S_N" begin="0" end="1000" number="50" route="route_S_N" type="normal_car" color="0,1,0" /> <flow id="traffic_E_W" begin="0" end="1000" number="50" route="route_E_W" type="normal_car" color="0,0,1" /> <flow id="traffic_W_E" begin="0" end="1000" number="50" route="route_W_E" type="normal_car" color="1,1,0" /> </routes>
