@@ -43,5 +43,4 @@
 -->
 
 <tripinfos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/tripinfo_file.xsd">
-    <tripinfo id="ourVehicle2" depart="4.00" departLane=":254384053_12_0" departPos="0.00" departSpeed="15.00" departDelay="0.00" arrival="9.00" arrivalLane="495683152_0" arrivalPos="33.44" arrivalSpeed="18.18" duration="5.00" routeLength="74.78" waitingTime="0.00" waitingCount="0" stopTime="0.00" timeLoss="2.67" rerouteNo="0" devices="tripinfo_ourVehicle2" vType="DEFAULT_VEHTYPE" speedFactor="4.11" vaporized=""/>
 </tripinfos>

@@ -36,8 +36,6 @@ public class Main {
         MySystem mySystem = new MySystem(conn.traciConnection);
         LaneLoader currentLanes = new LaneLoader(conn);
 
-        RouteGenerator routeGenerator = new RouteGenerator();
-
         VehicleAdder vehicleAdder = new VehicleAdder();
         YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
         new TrafficLightSplitter();
@@ -45,10 +43,6 @@ public class Main {
         TrafficLightSplitter.loadTrafficLights(mySystem);
         TrafficLightSplitter.splitTrafficLight();
 
-
-
-        VehicleAdder vehicleAdder = new VehicleAdder();
-        YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
 
         List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
         System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
