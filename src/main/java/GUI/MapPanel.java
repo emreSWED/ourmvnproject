@@ -22,6 +22,8 @@ public class MapPanel extends JPanel {
     private List<MyVehicle> currentVehicles = new ArrayList<>(); //save list of Vehicles we want to draw
     private final Map<MyVehicle, Shape> carHitboxes = new HashMap<>();
     private final CarRenderer carRenderer = new CarRenderer();
+    private final TrafficLightRenderer trafficLightRenderer = new TrafficLightRenderer();
+
     private List<MyTrafficLight> currentTrafficLights = new ArrayList<>();
 
 
@@ -36,7 +38,6 @@ public class MapPanel extends JPanel {
     private final Color COLOR_ROAD_BORDER = Color.WHITE;
     private final Color COLOR_ASPHALT = new Color(28, 28, 28);
     private final Color COLOR_DASH = Color.WHITE;
-    private final Color COLOR_CAR = new Color(156, 26, 72);
 
     private final double LANE_WIDTH = 3.5;
 
@@ -137,15 +138,10 @@ public class MapPanel extends JPanel {
         g2d.translate(offsetX, offsetY);
         g2d.scale(scaleFactor, scaleFactor);
 
-        // --- ÄNDERUNG: Randbreite drastisch reduziert ---
-        // Vorher: LANE_WIDTH + 1.5 (Mauer)
-        // Jetzt:  LANE_WIDTH + 0.4 (Feine Kontur)
-        // Dadurch verschmelzen benachbarte Spuren optisch zu einer schwarzen Fläche.
         drawRoadLayer(g2d, COLOR_ROAD_BORDER, LANE_WIDTH + 0.4);
 
         drawRoadLayer(g2d, COLOR_ASPHALT, LANE_WIDTH);
 
-        // Zeichnet jetzt die verschobenen Linien
         drawRoadMarkings(g2d);
 
         drawTrafficLights(g2d);
@@ -246,8 +242,6 @@ public class MapPanel extends JPanel {
             double perpX = -uY;
             double perpY = uX;
 
-            // --- A) STOPPLINIE ZEICHNEN ---
-            // Die Linie geht vom linken Rand bis zum rechten Rand der Spur am Ende
             double stopLeftX = xEnd + perpX * (LANE_WIDTH / 2.0);
             double stopLeftY = yEnd + perpY * (LANE_WIDTH / 2.0);
             double stopRightX = xEnd - perpX * (LANE_WIDTH / 2.0);
@@ -258,8 +252,6 @@ public class MapPanel extends JPanel {
             g2d.draw(new Line2D.Double(stopLeftX, stopLeftY, stopRightX, stopRightY));
 
 
-            // --- B) GESTRICHELTE MITTELLINIE ZEICHNEN ---
-            // Wir berechnen die Gesamtlänge, um rechtzeitig aufzuhören
             double totalLength = 0;
             for (int i = 0; i < n - 1; i++) {
                 double ddx = lane.xpositions[i+1] - lane.xpositions[i];
@@ -267,10 +259,9 @@ public class MapPanel extends JPanel {
                 totalLength += Math.sqrt(ddx*ddx + ddy*ddy);
             }
 
-            // Wir hören auf zu zeichnen: 2 Meter (Sicherheitsabstand) + Lücke
             double cutOffLength = 2.0 + stopLineGap;
 
-            if (totalLength <= cutOffLength) continue; // Spur zu kurz
+            if (totalLength <= cutOffLength) continue;
 
             Path2D dashedPath = new Path2D.Double();
             double currentDist = 0;
@@ -288,7 +279,6 @@ public class MapPanel extends JPanel {
 
                 if (segLen == 0) continue;
 
-                // Verschiebung nach Links (Mitte der Straße)
                 double nx = segDy / segLen;
                 double ny = -segDx / segLen;
 
@@ -297,7 +287,6 @@ public class MapPanel extends JPanel {
                 double ox2 = x2 + nx * centerOffset;
                 double oy2 = y2 + ny * centerOffset;
 
-                // Logik zum Abschneiden vor der Stopplinie
                 if (currentDist + segLen > totalLength - cutOffLength) {
                     double remaining = (totalLength - cutOffLength) - currentDist;
                     if (remaining > 0) {
@@ -308,7 +297,7 @@ public class MapPanel extends JPanel {
                         if (!firstPointSet) { dashedPath.moveTo(ox1, oy1); firstPointSet = true; }
                         dashedPath.lineTo(cutX, cutY);
                     }
-                    break; // Fertig mit dieser Spur
+                    break;
                 } else {
                     if (!firstPointSet) { dashedPath.moveTo(ox1, oy1); firstPointSet = true; }
                     dashedPath.lineTo(ox2, oy2);
@@ -327,172 +316,18 @@ public class MapPanel extends JPanel {
     private void drawCars(Graphics2D g2d) {
         carHitboxes.clear();
 
-        double carLength = 4.8; // Etwas länger für realistischere Proportionen
-        double carWidth = 2.0;
-
         for (MyVehicle car : currentVehicles) {
-
-            double rx = car.getX();
-            double ry = YCoordinateFlipper.flipYCoords(car.getY());
-            double angle = car.getAngle();
-
-            // Transformation für dieses Auto vorbereiten
-            AffineTransform original = g2d.getTransform();
-            g2d.translate(rx, ry);
-            g2d.rotate(Math.toRadians(angle));
-
-            // 1. KAROSSERIE (Abgerundet)
-            // Wir nutzen RoundRectangle für "weichere" Autos
-            RoundRectangle2D.Double body = new RoundRectangle2D.Double(
-                    -carWidth / 2, -carLength / 2,
-                    carWidth, carLength,
-                    0.5, 0.5 // Rundungs-Radius der Ecken
-            );
-
-            g2d.setColor(car.getColor());
-            g2d.fill(body);
-
-            // Schwarzer Rand für Kontrast
-            g2d.setColor(Color.BLACK);
-            g2d.setStroke(new BasicStroke(0.1f));
-            g2d.draw(body);
-
-            // 2. WINDSCHUTZSCHEIBE (Damit man sieht, wo vorne ist)
-            // SUMO Winkel 0 ist "Oben", Autos fahren "nach oben" im lokalen Koordinatensystem
-            // Also ist Y-negativ "vorne".
-            g2d.setColor(new Color(163, 195, 230, 200)); // Hellblaues Glas
-
-            // Ein kleines Rechteck oder Trapez als Frontscheibe
-            double windowInset = 0.3;
-            double windowHeight = 0.8;
-            double windowY = -carLength/2 + 0.8; // Position vorne
-
-            Rectangle2D.Double windshield = new Rectangle2D.Double(
-                    -carWidth / 2 + windowInset,
-                    windowY,
-                    carWidth - 2 * windowInset,
-                    windowHeight
-            );
-            g2d.fill(windshield);
-
-            // Heckscheibe
-            double rearWindowY = carLength/2 - 1.0;
-            Rectangle2D.Double rearWindow = new Rectangle2D.Double(
-                    -carWidth / 2 + windowInset,
-                    rearWindowY,
-                    carWidth - 2 * windowInset,
-                    0.6
-            );
-            g2d.fill(rearWindow);
-
-            // Dach (optional, etwas dunkler für 3D Effekt)
-            // g2d.setColor(car.getColor().darker());
-            // g2d.fill(new Rectangle2D.Double(-carWidth/2+0.2, windowY + windowHeight, carWidth-0.4, rearWindowY - (windowY + windowHeight)));
-
-            // Reset Transformation
-            g2d.setTransform(original);
-
-            // --- HITBOX BERECHNUNG (Bleibt gleich) ---
-            AffineTransform t = new AffineTransform();
-            t.translate(rx, ry);
-            t.rotate(Math.toRadians(angle));
-            Shape worldShape = t.createTransformedShape(body);
+            Shape worldShape = carRenderer.draw(g2d, car);
             carHitboxes.put(car, worldShape);
         }
     }
+
 
     private void drawTrafficLights(Graphics2D g2d) {
         if (currentTrafficLights == null) return;
 
         for (MyTrafficLight tl : currentTrafficLights) {
-            try {
-                String state = tl.getState();
-                List<String> controlledLanes = tl.getControlledLanes();
-
-                int loopLimit = Math.min(state.length(), controlledLanes.size());
-
-                for (int i = 0; i < loopLimit; i++) {
-                    char signalChar = state.charAt(i);
-                    String laneID = controlledLanes.get(i);
-                    MyLane lane = LaneLoader.getLaneById(laneID);
-
-                    if (lane != null && lane.xpositions.length > 1) {
-                        int last = lane.xpositions.length - 1;
-
-                        double xEnd = lane.xpositions[last];
-                        double yEnd = lane.ypositions[last];
-                        double xPrev = lane.xpositions[last - 1];
-                        double yPrev = lane.ypositions[last - 1];
-
-                        // Richtungsvektor
-                        double dx = xEnd - xPrev;
-                        double dy = yEnd - yPrev;
-                        double len = Math.sqrt(dx * dx + dy * dy);
-
-                        if (len < 0.1) continue;
-                        dx /= len;
-                        dy /= len;
-
-                        // --- KONFIGURATION AMPEL ---
-                        double w = 1.6;  // Breite (etwas dicker)
-                        double h = 4.5;  // Höhe (deutlich größer)
-
-                        // Verschiebung nach Rechts (neben die Straße)
-                        double offsetSide = LANE_WIDTH * 0.8 + 1.2;
-
-                        // Verschiebung nach "Hinten" (entlang der Straße), damit Vorderkante bündig ist
-                        // Wir schieben das Zentrum um die Hälfte der Höhe zurück.
-                        double offsetBack = h / 2.0;
-
-                        // Neue Position berechnen:
-                        // 1. Zum Ende gehen (xEnd, yEnd)
-                        // 2. Zur Seite gehen (-dy, dx)
-                        // 3. Zurück gehen (-dx, -dy)
-                        double lightX = xEnd + (-dy * offsetSide) - (dx * offsetBack);
-                        double lightY = yEnd + (dx * offsetSide) - (dy * offsetBack);
-
-                        double angle = Math.atan2(dy, dx);
-
-                        // --- ZEICHNEN ---
-                        AffineTransform old = g2d.getTransform();
-                        g2d.translate(lightX, lightY);
-                        g2d.rotate(angle + Math.PI / 2);
-
-                        // Gehäuse
-                        g2d.setColor(Color.DARK_GRAY);
-                        g2d.fill(new RoundRectangle2D.Double(-w/2, -h/2, w, h, 0.5, 0.5));
-                        g2d.setColor(Color.BLACK);
-                        g2d.setStroke(new BasicStroke(0.1f));
-                        g2d.draw(new RoundRectangle2D.Double(-w/2, -h/2, w, h, 0.5, 0.5));
-
-                        // Lichter
-                        Color cRed = new Color(50, 0, 0);
-                        Color cYellow = new Color(50, 50, 0);
-                        Color cGreen = new Color(0, 50, 0);
-
-                        switch (Character.toLowerCase(signalChar)) {
-                            case 'r': cRed = Color.RED; break;
-                            case 'y': cYellow = Color.YELLOW; break;
-                            case 'g': cGreen = Color.GREEN; break;
-                        }
-
-                        double rSize = 1.0; // Größere Lichter
-                        double xPos = -rSize / 2;
-
-                        // Positionen der Lichter im Gehäuse verteilt
-                        g2d.setColor(cRed);
-                        g2d.fill(new Ellipse2D.Double(xPos, -h/2 + 0.5, rSize, rSize));
-
-                        g2d.setColor(cYellow);
-                        g2d.fill(new Ellipse2D.Double(xPos, -rSize/2, rSize, rSize)); // Mitte
-
-                        g2d.setColor(cGreen);
-                        g2d.fill(new Ellipse2D.Double(xPos, h/2 - 0.5 - rSize, rSize, rSize));
-
-                        g2d.setTransform(old);
-                    }
-                }
-            } catch (Exception e) { }
+            trafficLightRenderer.draw(g2d, tl);
         }
     }
 }

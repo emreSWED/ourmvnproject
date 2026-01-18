@@ -17,7 +17,7 @@ public class ConnectionManager {
 
     public ConnectionManager(String configFile) {
         this.configFile = configFile;
-        traciConnection = new SumoTraciConnection("sumo-gui", this.configFile);
+        traciConnection = new SumoTraciConnection("sumo", this.configFile);
     }
 
     public Object dojobget(SumoCommand cmd) throws Exception {
@@ -39,6 +39,8 @@ public class ConnectionManager {
     }
 
     public void step() throws Exception {
-        traciConnection.do_timestep();
+        try {
+            traciConnection.do_timestep();
+        } catch (Exception _) {}
     }
 }
