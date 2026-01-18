@@ -28,7 +28,7 @@ public class Main {
 
         ConnectionManager conn = new ConnectionManager("SumoConfig/myconfig.sumocfg");
         conn.startConnection();
-        RouteGenerator.conn = conn;
+        RouteGenerator2.conn = conn;
         MyLane.conn = conn;
         VehicleAdder.conn = conn;
         SimulationWindowBounds simulationWindowBounds = new SimulationWindowBounds(conn);
@@ -46,19 +46,21 @@ public class Main {
         TrafficLightSplitter.splitTrafficLight();
 
 
-        //List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
-        //END OF LOADING BLOCK
 
-       // System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
+        VehicleAdder vehicleAdder = new VehicleAdder();
+        YCoordinateFlipper yCoordinateFlipper = new YCoordinateFlipper();
+
+        List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
+        System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
 
         LOG.info("Starting application...");
 
-       // System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
+        System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
 
         javax.swing.SwingUtilities.invokeAndWait(() -> {
             try {
                 gui = new GUI.SumoTrafficControl();
-                gui.setTrafficLights(TrafficLightSplitter.trafficLightClusters);
+                gui.setTrafficLights(trafficLightsList);
                 gui.setVisible(true);
             } catch (Exception e) {
                 LOG.error("Failed starting the GUI",e);
@@ -86,13 +88,14 @@ public class Main {
             conn.step();
             step++;
 
+            List<MyTrafficLight> currentLights = mySystem.getTrafficLights();
+
             if (gui != null) {
-                gui.refreshMap(mySystem.getVehicles());
+                gui.refreshMap(mySystem.getVehicles(), currentLights);
             }
 
-
-            //System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
-            //System.out.println("List of cars in simulation: " + mySystem.getVehicles());
+            System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
+            System.out.println("List of cars in simulation: " + mySystem.getVehicles());
 
             //newly added to show total number of vehicles in simulation in a Label
             SumoTrafficControl.setInfoCountVehText(SumoTrafficControl.getStringVehiclesCount(mySystem.getVehicles().size()));
@@ -100,10 +103,10 @@ public class Main {
 
             List<MyVehicle> vehicles = mySystem.getVehicles();
             for (MyVehicle v : vehicles) {
-                //if (step % 10 == 0) v.setColor(new SumoColor(255, 0, 0, 255));
-                //if (step % 10 == 3) v.setColor(new SumoColor(0, 255, 0, 255));
-                //if (step % 10 == 7) v.setColor(new SumoColor(0, 9, 255, 255));
-                //System.out.println(v.getX() + ", " + v.getY() + ", " + v.getSpeed() + ", " + v.getId() + ", " + v.getColor());
+                if (step % 10 == 0) v.setColor(new SumoColor(255, 0, 0, 255));
+                if (step % 10 == 3) v.setColor(new SumoColor(0, 255, 0, 255));
+                if (step % 10 == 7) v.setColor(new SumoColor(0, 9, 255, 255));
+                System.out.println(v.getX() + ", " + v.getY() + ", " + v.getSpeed() + ", " + v.getId() + ", " + v.getColor());
             }
 
             try {

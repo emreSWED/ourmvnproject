@@ -27,8 +27,12 @@ public class MyLane {
    public double[] ypositions;
 
 
-
-
+    /**
+     * This cl
+     * @param laneID
+     * @param lanePointSize
+     * @throws Exception
+     */
     public MyLane(String laneID, int lanePointSize) throws Exception {
         this.laneID = laneID;
         this.xpositions = new double[lanePointSize];
