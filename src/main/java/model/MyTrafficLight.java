@@ -53,7 +53,7 @@ public class MyTrafficLight {
         }
     }
 
-    public void setState(int phase){
+    public void setState(String phase){
         try {
             conn.do_job_set(Trafficlight.setPhase(this.id, phase));
         } catch (Exception e) {
