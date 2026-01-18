@@ -1,5 +1,4 @@
 package GUI;
-import de.tudresden.sumo.cmd.Vehicle;
 import loader.VehicleAdder;
 import model.MyTrafficLight;
 import util.ConnectionManager;
@@ -171,7 +170,7 @@ public class SumoTrafficControl extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
                 try{
-                    trafficLights.setPhase("GGGGGGGGG");
+                    trafficLights.setState("GGGGGGGGG");
                     for(int i = 0; i<100; i++)
                     {
                         VehicleAdder.addRandomVehicle();
@@ -204,7 +203,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setPhase("rrrrrrrrr");
+                trafficLights.setState("rrrrrrrrr");
             }
         });
         btnNewButton_1.setBounds(10, 492, 133, 50);
@@ -215,7 +214,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setPhase("GGGGGGGGG");
+                trafficLights.setState("GGGGGGGGG");
             }
         });
         btnNewButton_1_1.setBounds(153, 572, 133, 50);
@@ -226,7 +225,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setPhase("yyyyyyyyy");
+                trafficLights.setState("yyyyyyyyy");
             }
         });
         btnNewButton_1_1_1.setBounds(153, 492, 133, 50);
@@ -237,7 +236,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1_2.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setPhase("ggggggggg");
+                trafficLights.setState("ggggggggg");
             }
         });
         btnNewButton_1_1_2.setBounds(10, 572, 133, 50);

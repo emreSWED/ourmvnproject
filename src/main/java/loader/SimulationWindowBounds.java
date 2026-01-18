@@ -15,6 +15,6 @@ public class SimulationWindowBounds {
         bounds = (SumoGeometry) conn.dojobget(Simulation.getNetBoundary());
         xCoordinateBound = bounds.coords.get(1).x; //as lower bound always starts at 0,0; we only need to get the upper bounds
         yCoordinateBound = bounds.coords.get(1).y;
-        yBound1 = yCoordinateBound;
+        yBound1 = yCoordinateBound; //Loads the static variable in YCoordinateFlipper Class
     }
 }
