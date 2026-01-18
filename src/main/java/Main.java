@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import util.ConnectionManager;
 import util.MySystem;
-
+import util.TrafficDataExporter;
 
 import model.MyVehicle;
 
@@ -23,6 +23,11 @@ public class Main {
 
     static GUI.SumoTrafficControl gui;
     public static final Logger LOG = LogManager.getLogger(Main.class.getName());
+    /**
+     * Main entry point of the application.
+     * * @param args Command line arguments (not used).
+     * @throws Exception If the connection to SUMO fails or file access errors occur.
+     */
     public static void main(String[] args) throws Exception {
 
         LOG.info("initializing connection to SUMO");
@@ -64,9 +69,10 @@ public class Main {
                 e.printStackTrace();
             }
         });
-
-
-
+        /**
+         * The exporter used to save vehicle data into a CSV file.
+         */
+        TrafficDataExporter exporter = new TrafficDataExporter("simulation_results.csv");
         int step = 0;
 
         while (MySystem.running) {
@@ -84,6 +90,12 @@ public class Main {
             conn.step();
             step++;
 
+            // Daten für GUI und Export holen
+            List<MyVehicle> vehicles = mySystem.getVehicles();
+
+            // Deine neue Klasse nutzen:
+            exporter.logCurrentStep(step, vehicles);
+
             if (gui != null) {
                 gui.refreshMap(mySystem.getVehicles());
             }
@@ -92,7 +104,7 @@ public class Main {
             //System.out.println("step number " + step + ". Number of vehicles in simulation: " + mySystem.getVehicles().size());
             //System.out.println("List of cars in simulation: " + mySystem.getVehicles());
 
-            List<MyVehicle> vehicles = mySystem.getVehicles();
+            //List<MyVehicle> vehicles = mySystem.getVehicles();
             for (MyVehicle v : vehicles) {
                 //if (step % 10 == 0) v.setColor(new SumoColor(255, 0, 0, 255));
                 //if (step % 10 == 3) v.setColor(new SumoColor(0, 255, 0, 255));
@@ -106,6 +118,9 @@ public class Main {
                 return;
             }
         }
+        // Wenn die Schleife endet
+        exporter.closeExport();
+        conn.stopConnection();
 
         //SOME TESTS
         conn.stopConnection();
