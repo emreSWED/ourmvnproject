@@ -8,8 +8,7 @@ import util.MySystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -73,13 +72,35 @@ public class MapPanel extends JPanel {
                             return;
                         }
                     }
+
+                    if (!shift) {
+                        MySystem.selectedVehicles.clear();
+                        System.out.println("Deselected all cars");
+                        repaint();
+                    } else
+                        System.out.println("Nothing happened");
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
         });
-    }
 
+        InputMap im = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = this.getActionMap();
+
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK), "selectAll");
+
+        am.put("selectAll", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MySystem.selectedVehicles.clear();
+                MySystem.selectedVehicles.addAll(currentVehicles);
+                System.out.println("Selected all car: " + MySystem.selectedVehicles);
+                repaint();
+            }
+        });
+    }
 
     //interface to the outside, Main calls up this method, when new cars
     public void updateVehicles(List<MyVehicle> vehicles) {
