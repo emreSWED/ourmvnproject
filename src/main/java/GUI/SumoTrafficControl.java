@@ -1,7 +1,6 @@
 package GUI;
-import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.objects.SumoColor;
-import loader.SingleTrafficLight;
+import loader.LaneTrafficLight;
 import loader.VehicleAdder;
 import model.MyTrafficLight;
 import util.ConnectionManager;
@@ -54,10 +53,10 @@ public class SumoTrafficControl extends JFrame {
     private MySystem mySystem = new MySystem(connectionManager.traciConnection);
     private List<MyTrafficLight> loadedTrafficLights = new ArrayList<>();
     private String currentTrafficLightID = mySystem.getTrafficLights().getFirst().getId();
-    private SingleTrafficLight singleTrafficLight;
-    MyTrafficLight trafficLights = new MyTrafficLight(currentTrafficLightID, ConnectionManager.traciConnection);
+    private LaneTrafficLight laneTrafficLight;
+    MyTrafficLight trafficLight = new MyTrafficLight(currentTrafficLightID, ConnectionManager.traciConnection);
 
-    public void setTrafficLights(List<MyTrafficLight> lights) {
+    public void setTrafficLight(List<MyTrafficLight> lights) {
         this.loadedTrafficLights = lights;
     }
 
@@ -188,7 +187,7 @@ public class SumoTrafficControl extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
                 try{
-                    trafficLights.setState("GGGGGGGGG");
+                    trafficLight.setState("GGGGGGGGG");
                     for(int i = 0; i<100; i++)
                     {
                         VehicleAdder.addRandomVehicle();
@@ -221,7 +220,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("rrrrrrrrr");
+                trafficLight.setState("rrrrrrrrr");
             }
         });
         btnNewButton_1.setBounds(10, 492, 133, 50);
@@ -232,7 +231,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("GGGGGGGGG");
+                trafficLight.setState("GGGGGGGGG");
             }
         });
         btnNewButton_1_1.setBounds(153, 572, 133, 50);
@@ -243,7 +242,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("yyyyyyyyy");
+                trafficLight.setState("yyyyyyyyy");
             }
         });
         btnNewButton_1_1_1.setBounds(153, 492, 133, 50);
@@ -254,7 +253,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1_2.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("ggggggggg");
+                trafficLight.setState("ggggggggg");
             }
         });
         btnNewButton_1_1_2.setBounds(10, 572, 133, 50);
