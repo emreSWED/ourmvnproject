@@ -7,9 +7,15 @@ import util.ConnectionManager;
 import de.tudresden.sumo.cmd.Lane;
 import de.tudresden.sumo.objects.SumoGeometry;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 //LaneLoader and MyLane classes work together to create all the instances of MyLane objects containing Path2D which is essential for rendering on Graphics2D
 //FOR RENDERING Path2D is ready to be used with y flipped coordinates
 public class MyLane {
+    private static final Logger LOG = LogManager.getLogger(MyLane.class.getName());
+
+
     public String laneID;
 
     public Path2D lanePath; //Creates a Path2D object for Graphics2D rendering in our own gui
@@ -21,8 +27,12 @@ public class MyLane {
    public double[] ypositions;
 
 
-
-
+    /**
+     * This cl
+     * @param laneID
+     * @param lanePointSize
+     * @throws Exception
+     */
     public MyLane(String laneID, int lanePointSize) throws Exception {
         this.laneID = laneID;
         this.xpositions = new double[lanePointSize];
@@ -36,7 +46,8 @@ public class MyLane {
             ypositions[i] = YCoordinateFlipper.flipYCoords(geometry.coords.get(i).y); //Sumo has 0,0 as BOTTOM LEFT; where as Graphics2D renders with TOP LEFT
         }
         //loads all the coordinates into an array for much simpler handling
-        System.out.println("creating Path2D object for rendering for lane: " + laneID + "..."); //todo LOGGER
+        //System.out.println("creating Path2D object for rendering for lane: " + laneID + "..."); //todo LOGGER
+        LOG.info("creating Path2D object for rendering for lane: " + laneID + "..."); //Update-> LOGGER DONE
         for(int i = 0; i < currentListSize; i++){
             if(i == 0){
                 lanePath.moveTo(xpositions[i], ypositions[i]);
@@ -47,6 +58,7 @@ public class MyLane {
         }
         lanePath.closePath();
 
-        System.out.println("Path2D object created."); //todo LOGGER
+        //System.out.println("Path2D object created."); //todo LOGGER
+        LOG.info("Path2D object created.");//Update-> LOGGER DONE
     }
 }

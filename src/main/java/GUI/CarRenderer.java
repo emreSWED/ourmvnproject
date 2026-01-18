@@ -29,8 +29,10 @@ public class CarRenderer {
                 carLength
         );
 
-        g2d.fill(localShape);
         g2d.setColor(car.getColor());
+        g2d.fill(localShape);
+
+        g2d.setColor(Color.BLACK);
         g2d.draw(localShape);
 
         AffineTransform t = new AffineTransform();

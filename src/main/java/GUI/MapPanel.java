@@ -7,10 +7,12 @@ import model.MyVehicle;
 import util.MySystem;
 import model.MyTrafficLight;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.*;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MapPanel extends JPanel {
+    private static final Logger LOG = LogManager.getLogger(MapPanel.class.getName());
 
     private List<MyVehicle> currentVehicles = new ArrayList<>(); //save list of Vehicles we want to draw
     private final Map<MyVehicle, Shape> carHitboxes = new HashMap<>();
@@ -40,7 +43,6 @@ public class MapPanel extends JPanel {
     private final Color COLOR_CAR = new Color(156, 26, 72);
 
     private final double LANE_WIDTH = 3.5;
-    private Point2D debugClickPoint = null;
 
     //constructor
     public MapPanel() {
@@ -77,13 +79,36 @@ public class MapPanel extends JPanel {
                             return;
                         }
                     }
+
+                    if (!shift) {
+                        MySystem.selectedVehicles.clear();
+                        System.out.println("Deselected all cars");
+                        repaint();
+                    } else
+                        System.out.println("Nothing happened");
+
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    //ex.printStackTrace();
+                    LOG.error("Error processing mouse click in MapPanel ",ex);// if scaleFactor == 0
                 }
             }
         });
-    }
 
+        InputMap im = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = this.getActionMap();
+
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK), "selectAll");
+
+        am.put("selectAll", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MySystem.selectedVehicles.clear();
+                MySystem.selectedVehicles.addAll(currentVehicles);
+                System.out.println("Selected all car: " + MySystem.selectedVehicles);
+                repaint();
+            }
+        });
+    }
 
     //interface to the outside, Main calls up this method, when new cars
     public void updateMap(List<MyVehicle> vehicles, List<MyTrafficLight> lights) {
@@ -301,6 +326,8 @@ public class MapPanel extends JPanel {
             g2d.draw(dashedPath);
         }
     }
+
+
 
     private void drawCars(Graphics2D g2d) {
         carHitboxes.clear();
