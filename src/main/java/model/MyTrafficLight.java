@@ -1,5 +1,6 @@
 package model;
 import de.tudresden.sumo.cmd.Trafficlight;
+import de.tudresden.sumo.objects.SumoStringList;
 import it.polito.appeal.traci.SumoTraciConnection;
 
 import de.tudresden.sumo.objects.SumoLinkList;
@@ -30,9 +31,10 @@ public class MyTrafficLight {
         return (List<String>) this.conn.do_job_get(Trafficlight.getControlledJunctions(this.id));
     }
 
-    public List<String> getControlledLanes() throws Exception {
-        return ((List<String>) this.conn.do_job_get(Trafficlight.getControlledLanes(this.id))).stream().distinct().toList();
-    }
+   public SumoStringList getControlledLanes() throws Exception {
+        return (SumoStringList) this.conn.do_job_get(Trafficlight.getControlledLanes(this.id));
+   }
+
 
     public SumoLinkList getControlledLinks() throws Exception {
         return (SumoLinkList) this.conn.do_job_get(Trafficlight.getControlledLinks(this.id));
@@ -46,8 +48,17 @@ public class MyTrafficLight {
         try {
             conn.do_job_set(Trafficlight.setRedYellowGreenState(this.id, state));
         } catch (Exception e) {
+            System.out.println("Could not set state");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setState(int phase){
+        try {
+            conn.do_job_set(Trafficlight.setPhase(this.id, phase));
+        } catch (Exception e) {
             //System.out.println("Could not set phase");
-            LOG.error("Failed to set Traffic Light {} to Phase {}",id,state,e);
+            LOG.error("Failed to set Traffic Light {} to Phase {}",id,phase,e);
 
         }
     }

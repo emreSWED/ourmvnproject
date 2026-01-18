@@ -39,10 +39,8 @@ public class MapPanel extends JPanel {
     private final Color COLOR_ROAD_BORDER = Color.WHITE;
     private final Color COLOR_ASPHALT = Color.BLACK;
     private final Color COLOR_DASH = Color.WHITE;
-    private final Color COLOR_CAR = new Color(0, 255, 255);
 
     private final double LANE_WIDTH = 3.5;
-    private Point2D debugClickPoint = null;
 
     //constructor
     public MapPanel() {
@@ -200,42 +198,9 @@ public class MapPanel extends JPanel {
 
         carHitboxes.clear();
 
-        double carLength = 4.5;
-        double carWidth = 2.0;
-
         for (MyVehicle car : currentVehicles) {
-
-            double rx = car.getX();
-            double ry = YCoordinateFlipper.flipYCoords(car.getY());
-            double angle = car.getAngle();
-
-            AffineTransform original = g2d.getTransform();
-
-            g2d.translate(rx, ry);
-            g2d.rotate(Math.toRadians(angle));
-
-            Rectangle2D.Double localShape = new Rectangle2D.Double(
-                    -carWidth / 2,
-                    -carLength / 2,
-                    carWidth,
-                    carLength
-            );
-
-            g2d.setColor(car.getColor());
-            g2d.fill(localShape);
-
-            g2d.setColor(Color.BLACK);
-            g2d.draw(localShape);
-
-            g2d.setTransform(original);
-
-            AffineTransform t = new AffineTransform();
-            t.translate(rx, ry);
-            t.rotate(Math.toRadians(angle));
-
-            Shape worldShape = t.createTransformedShape(localShape);
+            Shape worldShape = carRenderer.draw(g2d, car);
             carHitboxes.put(car, worldShape);
         }
     }
-
 }
