@@ -71,8 +71,6 @@ public class MyVehicle {
         }
     }
 
-
-
     public void setSpeed(double speedMetersPerSecond) {
         try {
             conn.do_job_set(de.tudresden.sumo.cmd.Vehicle.setSpeed(this.id, speedMetersPerSecond));

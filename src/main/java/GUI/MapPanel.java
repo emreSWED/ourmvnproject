@@ -73,6 +73,14 @@ public class MapPanel extends JPanel {
                             return;
                         }
                     }
+
+                    if (!shift) {
+                        MySystem.selectedVehicles.clear();
+                        System.out.println("Deselected all cars");
+                        repaint();
+                    } else
+                        System.out.println("Nothing happened");
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
