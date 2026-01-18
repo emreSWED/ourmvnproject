@@ -18,6 +18,7 @@ public class MySystem {
     public static volatile boolean stopped = false;
     public static final Object stepLock = new Object();
 
+    public static volatile int ticksPerSecond = 10;
     public static List<MyVehicle> selectedVehicles = new ArrayList<>();
     public static List<MyTrafficLight> selectedTrafficLights =  new ArrayList<>();
 

@@ -95,4 +95,13 @@ public class MyVehicle {
             LOG.error("Fehler color..."+ id,e);
         }
     }
+
+    public void setColor(Color color) {
+        try {
+            conn.do_job_set(de.tudresden.sumo.cmd.Vehicle.setColor(this.id, new SumoColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())));
+            System.out.println("Color set to " + color.getRed() + ", " + color.getGreen() + ", " + color.getBlue() + ", " + color.getAlpha());
+        } catch (Exception e) {
+            System.out.println("Fehler color " + id + " " + e.getMessage());
+        }
+    }
 }

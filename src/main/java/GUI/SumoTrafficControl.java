@@ -3,6 +3,7 @@ import de.tudresden.sumo.objects.SumoColor;
 import loader.LaneTrafficLight;
 import loader.VehicleAdder;
 import model.MyTrafficLight;
+import model.MyVehicle;
 import util.ConnectionManager;
 import util.MySystem;
 
@@ -12,8 +13,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -22,10 +21,6 @@ public class SumoTrafficControl extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JTextField textField_Red;
-    private JTextField textField_Green;
-    private JTextField textField_Blue;
-    private JTextField textField_Alpha;
 
     static JLabel infoCountVeh = new JLabel();
     static JSlider slider_Red = new JSlider();
@@ -154,6 +149,7 @@ public class SumoTrafficControl extends JFrame {
         lblNewLabel_1.setBounds(10, 150, 290, 40);
         contentPane.add(lblNewLabel_1);
 
+        // start button
         JButton btnStart = new JButton("START");
         styleButton(btnStart);
         btnStart.addActionListener(new ActionListener() {
@@ -168,7 +164,7 @@ public class SumoTrafficControl extends JFrame {
         btnStart.setBounds(10, 72, 133, 50);
         contentPane.add(btnStart);
 
-
+        // stop button
         JButton btnStop = new JButton("STOP");
         styleButton(btnStop);
         btnStop.addActionListener(new ActionListener() {
@@ -180,14 +176,48 @@ public class SumoTrafficControl extends JFrame {
         btnStop.setBounds(153, 72, 133, 50);
         contentPane.add(btnStop);
 
+        // tps slider
+        JLabel lblTickSpeed = new JLabel("Ticks/sec: " + MySystem.ticksPerSecond);
+        lblTickSpeed.setBounds(10, 130, 200, 20);
+        contentPane.add(lblTickSpeed);
+
+        JSlider tickSlider = getJSliderTps(lblTickSpeed);
+
+        contentPane.add(tickSlider);
+
+        // color preview
+        JPanel colorPreview = new JPanel();
+        colorPreview.setBackground(Color.WHITE);
+        colorPreview.setBounds(152, 222, 100, 50);
+        colorPreview.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        contentPane.add(colorPreview);
+
+        // color picker
+        JButton btnColor = new JButton("Change color");
+        styleButton(btnColor);
+        btnColor.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Color chosen = JColorChooser.showDialog(
+                        contentPane,
+                        "Choose color",
+                        Color.WHITE
+                );
+
+                if (chosen != null)
+                    colorPreview.setBackground(chosen);
+            }
+        });
+        btnColor.setBounds(10, 222, 133, 50);
+        contentPane.add(btnColor);
+
         JButton btnStressTest = new JButton("Stress Test");
         styleButton(btnStressTest);
         btnStressTest.setBounds(10, 800, 276, 50);
         btnStressTest.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                try{
-                    trafficLight.setState("GGGGGGGGG");
+                try {
+                    trafficLights.setState("GGGGGGGGG");
                     for(int i = 0; i<100; i++)
                     {
                         VehicleAdder.addRandomVehicle();
@@ -201,19 +231,59 @@ public class SumoTrafficControl extends JFrame {
         });
         contentPane.add(btnStressTest);
 
+        // add vehicle with color from color picker
         JButton btnAddVehicle = new JButton("Add Vehicle");
         styleButton(btnAddVehicle);
         btnAddVehicle.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    VehicleAdder.addRandomVehicle();
+                    VehicleAdder.addVehicle(colorPreview.getBackground());
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
             }
         });
-        btnAddVehicle.setBounds(10, 320, 276, 50);
+        btnAddVehicle.setBounds(10, 282, 276, 50);
         contentPane.add(btnAddVehicle);
+
+        // selected vehicles label
+        JLabel lblSelectedVehicles = new JLabel("Edit selected vehicles");
+        lblSelectedVehicles.setBounds(10, 350, 200, 20);
+        contentPane.add(lblSelectedVehicles);
+
+        // change color of every selected vehicle
+        JButton btnChangeColor = new JButton("Change color");
+        styleButton(btnChangeColor);
+        btnChangeColor.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                for (MyVehicle myVehicle : MySystem.selectedVehicles) {
+                    try { // if vehicle already despawned
+                        myVehicle.setColor(colorPreview.getBackground());
+                    } catch (Exception _) {}
+                }
+            }
+        });
+        btnChangeColor.setBounds(10, 372, 133, 50);
+        contentPane.add(btnChangeColor);
+
+        // change speed of every selected vehicle
+        JButton btnChangeSpeed = new JButton("Change speed");
+        styleButton(btnChangeSpeed);
+        btnChangeSpeed.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {}
+        });
+        btnChangeSpeed.setBounds(152, 372, 133, 50);
+        contentPane.add(btnChangeSpeed);
+
+        // change speed label
+        JLabel lblChangeSpeed = new JLabel("Speed: 0.0 m/s");
+        lblChangeSpeed.setBounds(152, 330, 200, 20);
+        lblChangeSpeed.setForeground(COLOR_TEXT);
+        contentPane.add(lblChangeSpeed);
+
+        // change speed slider
+        JSlider speedSlider = getJSliderSpeed(lblChangeSpeed);
+        contentPane.add(speedSlider);
 
         JButton btnNewButton_1 = new JButton("Red");
         styleButton(btnNewButton_1);
@@ -259,34 +329,6 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1_2.setBounds(10, 572, 133, 50);
         contentPane.add(btnNewButton_1_1_2);
 
-        JLabel lblNewLabel_2 = new JLabel("R");
-        lblNewLabel_2.setForeground(COLOR_TEXT);
-        lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 18));
-        lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_2.setBounds(6, 209, 46, 14);
-        contentPane.add(lblNewLabel_2);
-
-        JLabel lblNewLabel_2_1 = new JLabel("G");
-        lblNewLabel_2_1.setForeground(COLOR_TEXT);
-        lblNewLabel_2_1.setFont(new Font("Tahoma", Font.BOLD, 18));
-        lblNewLabel_2_1.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_2_1.setBounds(6, 234, 46, 14);
-        contentPane.add(lblNewLabel_2_1);
-
-        JLabel lblNewLabel_2_2 = new JLabel("B");
-        lblNewLabel_2_2.setForeground(COLOR_TEXT);
-        lblNewLabel_2_2.setFont(new Font("Tahoma", Font.BOLD, 18));
-        lblNewLabel_2_2.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_2_2.setBounds(6, 261, 46, 14);
-        contentPane.add(lblNewLabel_2_2);
-
-        JLabel lblNewLabel_2_3 = new JLabel("A");
-        lblNewLabel_2_3.setForeground(COLOR_TEXT);
-        lblNewLabel_2_3.setFont(new Font("Tahoma", Font.BOLD, 18));
-        lblNewLabel_2_3.setHorizontalAlignment(SwingConstants.CENTER);
-        lblNewLabel_2_3.setBounds(6, 287, 46, 14);
-        contentPane.add(lblNewLabel_2_3);
-
         JComboBox<String> comboBox = new JComboBox<>();
         List<MyTrafficLight> trafficLights = mySystem.getTrafficLights();
         String[] trafficLightIds = trafficLights.stream()
@@ -310,34 +352,46 @@ public class SumoTrafficControl extends JFrame {
             }
         });
         contentPane.add(comboBox);
+    }
 
-        textField_Red = new JTextField();
-        textField_Red.setEditable(false);
-        textField_Red.setBounds(257, 211, 29, 20);
-        textField_Red.setText(String.valueOf(slider_Red.getValue())); // <--- NEU
-        contentPane.add(textField_Red);
-        textField_Red.setColumns(10);
+    // tps slider
+    private static JSlider getJSliderTps(JLabel lblTickSpeed) {
+        JSlider tickSlider = new JSlider(JSlider.HORIZONTAL, 1, 60, MySystem.ticksPerSecond);
+        tickSlider.setBounds(10, 155, 280, 18);
+        tickSlider.setPaintTicks(false);
+        tickSlider.setPaintLabels(false);
+        tickSlider.setFocusable(false);
+        tickSlider.setOpaque(false);
 
-        textField_Green = new JTextField();
-        textField_Green.setEditable(false);
-        textField_Green.setColumns(10);
-        textField_Green.setBounds(257, 236, 29, 20);
-        textField_Green.setText(String.valueOf(slider_Green.getValue())); // <--- NEU
-        contentPane.add(textField_Green);
+        tickSlider.addChangeListener(e -> {
+            int value = tickSlider.getValue();
+            MySystem.ticksPerSecond = value;
+            lblTickSpeed.setText("Ticks/sec: " + value);
+        });
 
-        textField_Blue = new JTextField();
-        textField_Blue.setEditable(false);
-        textField_Blue.setColumns(10);
-        textField_Blue.setBounds(257, 263, 29, 20);
-        textField_Blue.setText(String.valueOf(slider_Blue.getValue())); // <--- NEU
-        contentPane.add(textField_Blue);
+        return tickSlider;
+    }
 
-        textField_Alpha = new JTextField();
-        textField_Alpha.setEditable(false);
-        textField_Alpha.setColumns(10);
-        textField_Alpha.setBounds(257, 289, 29, 20);
-        textField_Alpha.setText(String.valueOf(slider_Alpha.getValue())); // <--- NEU
-        contentPane.add(textField_Alpha);
+    private static JSlider getJSliderSpeed(JLabel lblChangeSpeed) {
+        JSlider speedSlider = new JSlider(JSlider.HORIZONTAL, 0, 50, 0);
+        speedSlider.setBounds(152, 350, 120, 18);
+        speedSlider.setPaintTicks(false);
+        speedSlider.setPaintLabels(false);
+        speedSlider.setFocusable(false);
+        speedSlider.setOpaque(false);
+
+        speedSlider.addChangeListener(e -> {
+            double speed = speedSlider.getValue() / 10.0;
+            lblChangeSpeed.setText("Speed: " + speed + " m/s");
+
+            for (MyVehicle myVehicle : MySystem.selectedVehicles) {
+                myVehicle.setSpeed(speed);
+            }
+        });
+
+        return speedSlider;
+    }
+
 
         //newly Added Lable to Add information about total count of autos in simulation
         infoCountVeh.setFont(new Font("Tahoma", Font.TRUETYPE_FONT, 14));

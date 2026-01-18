@@ -103,14 +103,11 @@ public class Main {
 
 
             for (MyVehicle v : vehicles) {
-                if (step % 10 == 0) v.setColor(new SumoColor(255, 0, 0, 255));
-                if (step % 10 == 3) v.setColor(new SumoColor(0, 255, 0, 255));
-                if (step % 10 == 7) v.setColor(new SumoColor(0, 9, 255, 255));
                 System.out.println(v.getX() + ", " + v.getY() + ", " + v.getSpeed() + ", " + v.getId() + ", " + v.getColor());
             }
 
             try {
-                Thread.sleep(300);
+                Thread.sleep(1000 / MySystem.ticksPerSecond);
             } catch (InterruptedException e) {
                 return;
             }
