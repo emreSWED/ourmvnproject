@@ -35,16 +35,16 @@ public class MyTrafficLight {
         return (SumoStringList) this.conn.do_job_get(Trafficlight.getControlledLanes(this.id));
    }
 
-
     public SumoLinkList getControlledLinks() throws Exception {
         return (SumoLinkList) this.conn.do_job_get(Trafficlight.getControlledLinks(this.id));
     }
+
 
     public String getState() throws Exception {
         return (String) this.conn.do_job_get(Trafficlight.getRedYellowGreenState(this.id));
     }
 
-    public void setPhase(String state){
+    public void setState(String state){
         try {
             conn.do_job_set(Trafficlight.setRedYellowGreenState(this.id, state));
         } catch (Exception e) {
@@ -53,13 +53,11 @@ public class MyTrafficLight {
         }
     }
 
-    public void setState(String phase){
+    public void setState(int phase){
         try {
             conn.do_job_set(Trafficlight.setPhase(this.id, phase));
         } catch (Exception e) {
-            //System.out.println("Could not set phase");
-            LOG.error("Failed to set Traffic Light {} to Phase {}",id,phase,e);
-
+            System.out.println("Could not set phase");
         }
     }
 }

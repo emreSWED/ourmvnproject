@@ -57,7 +57,9 @@ public class SumoTrafficControl extends JFrame {
 
     public SumoTrafficControl() throws Exception {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1300, 900);
+        setTitle("Sumo Trafic Simulation");
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //setBounds(150, 0, 1300, 900);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -67,10 +69,10 @@ public class SumoTrafficControl extends JFrame {
         lblNewLabel.setBounds(10, 11, 1674, 93);
         lblNewLabel.setFont(new Font("Ink Free", Font.ITALIC, 60));
         lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        contentPane.add(lblNewLabel);
+        //contentPane.add(lblNewLabel);
 
         mapPanel = new MapPanel();
-        mapPanel.setBounds(320, 110, 950, 740);
+        mapPanel.setBounds(320, 20, 1200, 740);
         contentPane.add(mapPanel);
 
         // --- RED SLIDER ---

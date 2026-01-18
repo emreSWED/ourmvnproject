@@ -61,13 +61,15 @@ public class Main {
                 gui.setTrafficLights(TrafficLightSplitter.trafficLightClusters);
                 gui.setVisible(true);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.error("Failed starting the GUI",e);
             }
         });
 
 
 
         int step = 0;
+
+        MySystem.stopped = true;
 
         while (MySystem.running) {
 
@@ -105,7 +107,7 @@ public class Main {
             }
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 return;
             }
