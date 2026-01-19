@@ -19,6 +19,7 @@ import util.TrafficDataExporter;
 
 public class Main {
 
+
     static GUI.SumoTrafficControl gui;
     private static final Logger LOG = LogManager.getLogger(Main.class.getName());
     public static void main(String[] args) throws Exception {
@@ -54,7 +55,7 @@ public class Main {
         javax.swing.SwingUtilities.invokeAndWait(() -> {
             try {
                 gui = new GUI.SumoTrafficControl();
-                gui.setTrafficLight(trafficLightsList);
+                gui.setTrafficLights(trafficLightsList);
                 gui.setVisible(true);
             } catch (Exception e) {
                 LOG.error("Failed starting the GUI",e);
