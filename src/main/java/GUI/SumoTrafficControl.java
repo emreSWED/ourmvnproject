@@ -194,7 +194,7 @@ public class SumoTrafficControl extends JFrame {
         // change speed label
         JLabel lblChangeSpeed = new JLabel("Speed: 0.0 m/s");
         lblChangeSpeed.setBounds(152, 330, 200, 20);
-        lblChangeSpeed.setForeground(COLOR_TEXT);
+        lblChangeSpeed.setForeground(Color.RED);
         contentPane.add(lblChangeSpeed);
 
         // change speed slider
@@ -274,6 +274,7 @@ public class SumoTrafficControl extends JFrame {
         //newly Added Lable to Add information about total count of autos in simulation
         infoCountVeh.setFont(new Font("Tahoma", Font.TRUETYPE_FONT, 14));
         infoCountVeh.setHorizontalAlignment(SwingConstants.CENTER);
+        infoCountVeh.setForeground(Color.RED);
         infoCountVeh.setBounds(10, 650, 133, 50);
         contentPane.add(infoCountVeh);
     }
