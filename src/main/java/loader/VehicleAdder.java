@@ -4,6 +4,7 @@ import de.tudresden.sumo.cmd.Route;
 import de.tudresden.sumo.cmd.Simulation;
 import de.tudresden.sumo.cmd.Vehicle;
 import de.tudresden.sumo.objects.SumoColor;
+import it.polito.appeal.traci.TraCIException;
 import model.MyVehicle;
 import util.ConnectionManager;
 import util.MySystem;
@@ -26,7 +27,17 @@ public class VehicleAdder {
      */
     public static void addRandomVehicle() throws Exception {
         RouteGenerator2 routeGenerator = new RouteGenerator2();
-        conn.dojobset(Vehicle.add("ourVehicle"+vehCounter,"DEFAULT_VEHTYPE", "route"+(routeidcounter-1), (int)conn.dojobget(Simulation.getCurrentTime())+1, 0.0,15.0, (byte) 0));
+        SumoColor sumoColor = new SumoColor();
+        sumoColor.a = (byte)255;
+        sumoColor.r = (byte)((int)(Math.random()*254+1));
+        sumoColor.g = (byte)((int)(Math.random()*254+1));
+        sumoColor.b = (byte)((int)(Math.random()*254+1));
+        try {
+            conn.dojobset(Vehicle.add("ourVehicle"+vehCounter,"DEFAULT_VEHTYPE", "route"+(routeidcounter-1), (int)conn.dojobget(Simulation.getCurrentTime())+1, 0.0,15.0, (byte) 0));
+            conn.dojobset(Vehicle.setColor("ourVehicle"+vehCounter, sumoColor));
+        } catch (TraCIException ex) {
+            addRandomVehicle();
+        }
         vehCounter++;
     }
 

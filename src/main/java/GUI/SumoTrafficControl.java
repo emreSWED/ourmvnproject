@@ -133,7 +133,7 @@ public class SumoTrafficControl extends JFrame {
 
             public void actionPerformed(ActionEvent e) {
                 try {
-                    trafficLights.setState("GGGGGGGGG");
+                    trafficLights.setStateToFullGreen();
                     for(int i = 0; i<100; i++)
                     {
                         VehicleAdder.addRandomVehicle();
@@ -206,7 +206,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("rrrrrrrrr");
+                trafficLights.setStateToRed();
             }
         });
         btnNewButton_1.setBounds(10, 492, 133, 50);
@@ -217,7 +217,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("GGGGGGGGG");
+                trafficLights.setStateToFullGreen();
             }
         });
         btnNewButton_1_1.setBounds(153, 572, 133, 50);
@@ -228,7 +228,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1_1.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("yyyyyyyyy");
+                trafficLights.setStateToYellow();
             }
         });
         btnNewButton_1_1_1.setBounds(153, 492, 133, 50);
@@ -239,7 +239,7 @@ public class SumoTrafficControl extends JFrame {
         btnNewButton_1_1_2.setForeground(new Color(0, 0, 0));
         btnNewButton_1_1_2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                trafficLights.setState("ggggggggg");
+                trafficLights.setStateToGreen();
             }
         });
         btnNewButton_1_1_2.setBounds(10, 572, 133, 50);
@@ -258,6 +258,8 @@ public class SumoTrafficControl extends JFrame {
         comboBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 currentTrafficLightID = comboBox.getSelectedItem().toString();
+
+
 
                 if (loadedTrafficLights == null || loadedTrafficLights.isEmpty()) {
                     System.out.println("Warnung: Noch keine Ampeln geladen!");

@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import util.ConnectionManager;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MyTrafficLight {
@@ -44,6 +45,8 @@ public class MyTrafficLight {
         return (String) this.conn.do_job_get(Trafficlight.getRedYellowGreenState(this.id));
     }
 
+
+
     public void setState(String state){
         try {
             conn.do_job_set(Trafficlight.setRedYellowGreenState(this.id, state));
@@ -53,11 +56,70 @@ public class MyTrafficLight {
         }
     }
 
-    public void setState(int phase){
+
+    public void setStateToGreen(){
         try {
-            conn.do_job_set(Trafficlight.setPhase(this.id, phase));
+            String tlState = (String) conn.do_job_get(Trafficlight.getRedYellowGreenState(this.id));
+            int tlStatelenght =  tlState.length();
+            StringBuilder stateToSet = new StringBuilder();
+            char[] stateArray = new char[tlStatelenght];
+            Arrays.fill(stateArray, 'g');
+            stateToSet.append(stateArray);
+
+            conn.do_job_set(Trafficlight.setRedYellowGreenState(this.id, stateToSet.toString()));
         } catch (Exception e) {
             System.out.println("Could not set phase");
+            throw new RuntimeException(e);
         }
     }
+
+    public void setStateToRed(){
+        try {
+            String tlState = (String) conn.do_job_get(Trafficlight.getRedYellowGreenState(this.id));
+            int tlStatelenght =  tlState.length();
+            StringBuilder stateToSet = new StringBuilder();
+            char[] stateArray = new char[tlStatelenght];
+            Arrays.fill(stateArray, 'r');
+            stateToSet.append(stateArray);
+
+            conn.do_job_set(Trafficlight.setRedYellowGreenState(this.id, stateToSet.toString()));
+        } catch (Exception e) {
+            System.out.println("Could not set phase");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setStateToYellow(){
+        try {
+            String tlState = (String) conn.do_job_get(Trafficlight.getRedYellowGreenState(this.id));
+            int tlStatelenght =  tlState.length();
+            StringBuilder stateToSet = new StringBuilder();
+            char[] stateArray = new char[tlStatelenght];
+            Arrays.fill(stateArray, 'y');
+            stateToSet.append(stateArray);
+
+            conn.do_job_set(Trafficlight.setRedYellowGreenState(this.id, stateToSet.toString()));
+        } catch (Exception e) {
+            System.out.println("Could not set phase");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setStateToFullGreen(){
+        try {
+            String tlState = (String) conn.do_job_get(Trafficlight.getRedYellowGreenState(this.id));
+            int tlStatelenght =  tlState.length();
+            StringBuilder stateToSet = new StringBuilder();
+            char[] stateArray = new char[tlStatelenght];
+            Arrays.fill(stateArray, 'G');
+            stateToSet.append(stateArray);
+
+            conn.do_job_set(Trafficlight.setRedYellowGreenState(this.id, stateToSet.toString()));
+        } catch (Exception e) {
+            System.out.println("Could not set phase");
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

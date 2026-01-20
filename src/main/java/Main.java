@@ -27,7 +27,7 @@ public class Main {
         LOG.info("initializing connection to SUMO");
 
 
-        ConnectionManager conn = new ConnectionManager("SumoConfig/myconfig.sumocfg");
+        ConnectionManager conn = new ConnectionManager("SumoConfig/bigmap/osm.sumocfg");
         conn.startConnection();
         RouteGenerator2.conn = conn;
         MyLane.conn = conn;
@@ -46,11 +46,11 @@ public class Main {
 
 
         List<MyTrafficLight> trafficLightsList = mySystem.getTrafficLights();
-        System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
+       // System.out.println("List of Traffic Lights loaded: " + trafficLightsList.size());
 
         LOG.info("Starting application...");
 
-        System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
+        //System.out.println("Location of lane :254384053_11_0: " + conn.dojobget(Lane.getShape(":254384053_11_0")));
 
         javax.swing.SwingUtilities.invokeAndWait(() -> {
             try {

@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2026-01-18T22:58:07.627780+01:00 by Eclipse SUMO GUI 1.25.0
+<!-- generated on 2026-01-20 21:10:25 by Eclipse SUMO sumo Version 1.24.0
+-->
+
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="SumoConfig/osm.net.xml.gz"/>
-        <route-files value="SumoConfig/osm.passenger.trips.xml"/>
-        <additional-files value="SumoConfig/osm.poly.xml.gz,SumoConfig/output.add.xml"/>
+        <net-file value="osm.net.xml.gz"/>
+        <additional-files value="osm.poly.xml.gz"/>
     </input>
-
-    <output>
-        <tripinfo-output value="SumoConfig/tripinfos.xml"/>
-        <statistic-output value="SumoConfig/stats.xml"/>
-    </output>
 
     <processing>
         <ignore-route-errors value="true"/>
@@ -30,13 +26,8 @@
         <no-step-log value="true"/>
     </report>
 
-    <traci_server>
-        <remote-port value="63748"/>
-    </traci_server>
-
     <gui_only>
-        <gui-settings-file value="SumoConfig/osm.view.xml"/>
-        <start value="true"/>
+        <gui-settings-file value="osm.view.xml"/>
     </gui_only>
 
 </sumoConfiguration>
