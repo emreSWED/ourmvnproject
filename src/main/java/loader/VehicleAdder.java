@@ -34,7 +34,7 @@ public class VehicleAdder {
         sumoColor.b = (byte)((int)(Math.random()*254+1));
         try {
             conn.dojobset(Vehicle.add("ourVehicle"+vehCounter,"DEFAULT_VEHTYPE", "route"+(routeidcounter-1), (int)conn.dojobget(Simulation.getCurrentTime())+1, 0.0,15.0, (byte) 0));
-            //conn.dojobset(Vehicle.setColor("ourVehicle"+vehCounter, sumoColor));
+            conn.dojobset(Vehicle.setColor("ourVehicle"+vehCounter, sumoColor));
         } catch (TraCIException ex) {
             addRandomVehicle();
         }
