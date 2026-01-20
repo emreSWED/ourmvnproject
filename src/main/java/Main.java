@@ -27,7 +27,7 @@ public class Main {
         LOG.info("initializing connection to SUMO");
 
 
-        ConnectionManager conn = new ConnectionManager("SumoConfig/Stableoffenbach/osm.sumocfg");
+        ConnectionManager conn = new ConnectionManager("SumoConfig/bigmap/osm.sumocfg");
         conn.startConnection();
         RouteGenerator2.conn = conn;
         MyLane.conn = conn;
